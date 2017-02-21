@@ -1,0 +1,18 @@
+{cfe8411c-1521-4cba-8bc0-725e811d9b8e} event:/Cues/Interception
+{9caecb67-6233-4996-82d6-85ace1a5f596} event:/Cues/Passing Through Portal
+{12624824-dce7-4bd3-80d7-afc43ae0bd92} event:/Cues/P2 contact
+{bf302444-0c1a-4d6d-a5a6-0423067b4465} event:/Cues/P1 contact
+{ef00524e-bddf-46b7-9afd-4ad6a2dd2a79} event:/Cues/Wall Hit
+{f2da4aae-4e3e-48ae-ab3a-76d13116a12c} event:/Cues/P1 1 pt
+{78eddac0-f576-4ce3-95bc-20e9f2637ebb} event:/Cues/P1 2 pt
+{3410c959-03aa-4b79-a44c-f86b0e997dae} event:/Cues/P1 4 pt
+{574b169a-ffc4-4265-bc28-26f07e6ee798} event:/Cues/P1 8 pt
+{7aabbdf2-d270-4911-a1a8-f602b2bb34e6} event:/Cues/Goal Pass
+{d537e6a9-b6c1-4088-b147-9964aad26270} event:/Cues/P2 1 pt
+{0fc97705-e02f-4028-a8d9-96cfc167d876} event:/Cues/P2 2 pt
+{ac83ce62-498c-4605-8cbe-6bb7f761d7bc} event:/Cues/P2 4 pt
+{922e125a-f31a-4d1d-b04e-121afe647ca2} event:/Cues/P2 8 pt
+{cb7c3b49-0953-4d82-adc0-aeb8549db01d} event:/Music/Music
+{76e8834b-e121-48cb-95b1-e02ca6338396} bus:/
+{96c3b998-66d7-45dc-994f-46ba7c9f9f51} bus:/Reverb
+{126b558e-992c-4246-a5dd-bb2ac2adae3d} bank:/Master Bank
