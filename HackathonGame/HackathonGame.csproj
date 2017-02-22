@@ -81,14 +81,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CatchScript.cs" />
-    <Compile Include="Assets\DiscPointValueScript.cs" />
-    <Compile Include="Assets\DiscScript.cs" />
-    <Compile Include="Assets\GameStateScript.cs" />
     <Compile Include="Assets\GoogleVR\Scripts\Audio\FmodGvrAudio.cs" />
     <Compile Include="Assets\GoogleVR\Scripts\Audio\FmodGvrAudioRoom.cs" />
-    <Compile Include="Assets\PlayerMovement.cs" />
-    <Compile Include="Assets\PlayerRotationScript.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
@@ -97,7 +91,16 @@
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
-    <Compile Include="Assets\TeleporterScript.cs" />
+    <Compile Include="Assets\Scripts\CatchScript.cs" />
+    <Compile Include="Assets\Scripts\DiscPointValueScript.cs" />
+    <Compile Include="Assets\Scripts\DiscScript.cs" />
+    <Compile Include="Assets\Scripts\GameStateScript.cs" />
+    <Compile Include="Assets\Scripts\InputManagerScript.cs" />
+    <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerMovementInterface.cs" />
+    <Compile Include="Assets\Scripts\PlayerMovementType1.cs" />
+    <Compile Include="Assets\Scripts\PlayerRotationScript.cs" />
+    <Compile Include="Assets\Scripts\TeleporterScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\FMOD\LICENSE.TXT" />
