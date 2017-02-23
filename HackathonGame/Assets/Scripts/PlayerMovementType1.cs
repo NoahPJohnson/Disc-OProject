@@ -14,15 +14,15 @@ public class PlayerMovementType1 : PlayerMovementInterface
 		
 	}
 
-    public IEnumerator Move(float h, float v)
+    public void Move(float h, float v)
     {
-        while (h != 0 && v != 0)
-        {
+        //if (h != 0 && v != 0)
+        //{
             moveVector.z = v;
             moveVector.x = h;
             controllerToManipulate.Move(moveVector * moveSpeed * Time.deltaTime);
-        }
-        yield return null;
+        //}
+        
     }
 
     public void IdentifyPlayer(CharacterController playerUsingInterface)

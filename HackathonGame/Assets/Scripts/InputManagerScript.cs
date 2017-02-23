@@ -4,30 +4,27 @@ using UnityEngine;
 
 public class InputManagerScript : MonoBehaviour
 {
-    [SerializeField] int playerCount = 2;
-    [SerializeField] List<CharacterController> players;
-    List<PlayerMovementInterface> movementInterfaceList;
-    PlayerMovementType1 moveType1;
+    //[SerializeField] int playerCount = 2;
+    [SerializeField] string horizontalAxisName;
+    [SerializeField] CharacterController playerController;
+    [SerializeField] PlayerMovementInterface movementInterface;
 
 	// Use this for initialization
 	void Start ()
     {
-        for (int i = 0; i < playerCount; i ++)
-        {
-            movementInterfaceList.Add(moveType1);
-            movementInterfaceList[i].IdentifyPlayer(players[i]);
-            //Set other values like speed?
-        }
+        SetMovementType(new PlayerMovementType1());
+        //movementInterface = moveType1;
+        movementInterface.IdentifyPlayer(playerController);
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-		
+        movementInterface.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 	}
 
-    void InitilizeInterfaceList()
+    void SetMovementType(PlayerMovementInterface moveType)
     {
-        movementInterfaceList = new List<PlayerMovementInterface>();
+        movementInterface = moveType;
     }
 }

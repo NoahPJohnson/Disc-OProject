@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        MovePlayer();
+        //MovePlayer();
         if (transform.position.y != 1)
         {
             transform.position = new Vector3(transform.position.x, 1, transform.position.z);
