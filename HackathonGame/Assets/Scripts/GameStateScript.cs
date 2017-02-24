@@ -52,7 +52,7 @@ public class GameStateScript : MonoBehaviour
         for (int i = 0; i < objectsToPause.Length; i++)
         {
             objectsToPause[i].GetComponent<CatchScript>().gamePaused = true;
-            objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
+            //objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
         }
         Time.timeScale = 0;
         musicEvent = FMODUnity.RuntimeManager.CreateInstance(musicTrackName);
@@ -64,7 +64,7 @@ public class GameStateScript : MonoBehaviour
         points.setValue((player1Score + player2Score) / 2);
         //inGame.setValue(1f);
         themeDecision.setValue(1f);
-        musicEvent.start();
+        //musicEvent.start();
 	}
 	
 	// Update is called once per frame
@@ -172,7 +172,7 @@ public class GameStateScript : MonoBehaviour
                 for (int i = 0; i < objectsToPause.Length; i ++)
                 {
                     objectsToPause[i].GetComponent<CatchScript>().gamePaused = true;
-                    objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
+                    //objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
                 }
                 PauseScreen.SetActive(true);
                 pauseMenu.setValue(1);
@@ -184,7 +184,7 @@ public class GameStateScript : MonoBehaviour
                 for (int i = 0; i < objectsToPause.Length; i++)
                 {
                     objectsToPause[i].GetComponent<CatchScript>().gamePaused = false;
-                    objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = false;
+                    //objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = false;
                 }
                 PauseScreen.SetActive(false);
                 pauseMenu.setValue(0);
@@ -210,7 +210,7 @@ public class GameStateScript : MonoBehaviour
         for (int i = 0; i < objectsToPause.Length; i++)
         {
             objectsToPause[i].GetComponent<CatchScript>().gamePaused = false;
-            objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = false;
+            //objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = false;
         }
         paused = false;
         TitleScreenElements.SetActive(false);
@@ -222,7 +222,7 @@ public class GameStateScript : MonoBehaviour
         for (int i = 0; i < objectsToPause.Length; i++)
         {
             objectsToPause[i].GetComponent<CatchScript>().gamePaused = true;
-            objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
+            //objectsToPause[i].GetComponent<PlayerRotationScript>().gamePaused = true;
         }
         TitleScreenElements.SetActive(true);
         ResetGame();
