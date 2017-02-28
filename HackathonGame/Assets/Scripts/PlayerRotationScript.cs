@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class PlayerRotationScript : MonoBehaviour
 {
-    [SerializeField] Transform revMeasure;
+    //[SerializeField] Transform revMeasure;
     [SerializeField] float revFactor;
-    [SerializeField] float revDecay = 50f;
-    [SerializeField] float angleDifferenceDirection = 1f;
+    [SerializeField] float revThreshhold = 1f;
 
-    [SerializeField] float adjustedRevAngle = 0f;
+    //float rotationDirection = 1f;
+
+    //[SerializeField] float angleDifferenceDirection = 1f;
+
     [SerializeField] float adjustedRotationAngle = 0f;
+    [SerializeField] float oldAdjustedRotationAngle = 0f;
+    [SerializeField] float deltaAdjustedRotationAngle = 0f;
 
     // Use this for initialization
     void Start ()
@@ -21,24 +25,29 @@ public class PlayerRotationScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        adjustedRevAngle = revMeasure.rotation.eulerAngles.y;
         adjustedRotationAngle = transform.rotation.eulerAngles.y;
-        if (adjustedRevAngle < 0)
-        {
-            adjustedRevAngle += 180f;
-        }
         if (adjustedRotationAngle < 0)
         {
             adjustedRotationAngle += 180f;
         }
-        if (Mathf.Abs(adjustedRotationAngle - adjustedRevAngle) > .2f)
+        deltaAdjustedRotationAngle = (adjustedRotationAngle - oldAdjustedRotationAngle);
+        if (deltaAdjustedRotationAngle < -355)
         {
-            angleDifferenceDirection = Mathf.Sign(adjustedRotationAngle - adjustedRevAngle);
-            revMeasure.Rotate(0, revDecay * angleDifferenceDirection * Time.deltaTime, 0);
+            deltaAdjustedRotationAngle = ((adjustedRotationAngle + 360) - oldAdjustedRotationAngle);
+            //Debug.Log(deltaAdjustedRotationAngle);
         }
-
-
-        revFactor = adjustedRotationAngle - adjustedRevAngle;
-        
+        else if (deltaAdjustedRotationAngle > 355)
+        {
+            deltaAdjustedRotationAngle = ((adjustedRotationAngle - 360) - oldAdjustedRotationAngle);
+        }
+        oldAdjustedRotationAngle = adjustedRotationAngle;
+        if (Mathf.Abs(deltaAdjustedRotationAngle) > revThreshhold)
+        {
+            revFactor += deltaAdjustedRotationAngle;
+        }
+        else
+        {
+            revFactor = 0;
+        }
     }
 }
