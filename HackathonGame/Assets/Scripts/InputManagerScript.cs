@@ -10,14 +10,16 @@ public class InputManagerScript : MonoBehaviour
     [SerializeField] Transform playerRotationTransform;
     [SerializeField] PlayerMovementInterface movementInterface;
     [SerializeField] PlayerRotationInterface rotationInterface;
+    [SerializeField] PlayerCatchReleaseInterface catchInterface;
 
 	// Use this for initialization
 	void Start ()
     {
-        SetMovementType(new PlayerMovementType1(), new PlayerRotationType1());
+        SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1());
         //movementInterface = moveType1;
         movementInterface.IdentifyPlayer(playerController);
         rotationInterface.IdentifyPlayer(playerRotationTransform);
+        catchInterface.IdentifyCatchBox(playerRotationTransform);
 	}
 	
 	// Update is called once per frame
@@ -25,11 +27,14 @@ public class InputManagerScript : MonoBehaviour
     {
         movementInterface.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         rotationInterface.Rotate(Input.GetAxis("RightStick X"), Input.GetAxis("RightStick Y"));
+        catchInterface.Catch(Input.GetButtonDown("Fire1Player1"));
+        catchInterface.Throw(Input.GetButtonUp("Fire1Player1"));
 	}
 
-    void SetMovementType(PlayerMovementInterface moveType, PlayerRotationInterface rotationType)
+    void SetInterfaceType(PlayerMovementInterface moveType, PlayerRotationInterface rotationType, PlayerCatchReleaseInterface catchType)
     {
         movementInterface = moveType;
         rotationInterface = rotationType;
+        catchInterface = catchType;
     }
 }

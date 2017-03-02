@@ -39,7 +39,7 @@ public class CatchScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (gamePaused == false)
+        /*if (gamePaused == false)
         {
             if (player1 == true)
             {
@@ -65,7 +65,7 @@ public class CatchScript : MonoBehaviour
                     AttemptThrow();
                 }
             }
-        }
+        }*/
         if (ableToCatch == false && holdingDisc == false)
         {
             time += Time.deltaTime;
@@ -78,7 +78,7 @@ public class CatchScript : MonoBehaviour
         }
 	}
 
-    void AttemptCatch()
+    public void AttemptCatch()
     {
         if (ableToCatch == true)
         {
@@ -102,7 +102,7 @@ public class CatchScript : MonoBehaviour
         }
     }
 
-    void AttemptThrow()
+    public void AttemptThrow()
     {
         if (holdingDisc == true && transform.childCount > 1)
         {

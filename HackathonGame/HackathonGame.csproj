@@ -96,6 +96,8 @@
     <Compile Include="Assets\Scripts\DiscScript.cs" />
     <Compile Include="Assets\Scripts\GameStateScript.cs" />
     <Compile Include="Assets\Scripts\InputManagerScript.cs" />
+    <Compile Include="Assets\Scripts\PlayerCatchReleaseInterface.cs" />
+    <Compile Include="Assets\Scripts\PlayerCatchReleaseType1.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementInterface.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementType1.cs" />
