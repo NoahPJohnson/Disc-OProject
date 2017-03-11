@@ -6,6 +6,7 @@ public class PlayerCatchReleaseType1 : PlayerCatchReleaseInterface
 {
     Transform playerCatchBox;
     CatchScript catchScript;
+    
 
     public void Catch(bool buttonDown)
     {

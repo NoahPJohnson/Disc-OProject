@@ -103,6 +103,7 @@ public class DiscScript : MonoBehaviour
         {
             GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
         }
+        Physics.IgnoreLayerCollision(12, 8, true);
     }
 	
 	// Update is called once per frame
@@ -140,6 +141,7 @@ public class DiscScript : MonoBehaviour
         caught = true;
         discCollider.enabled = false;
         transform.parent = catchBox;
+        catchBox.GetComponent<CatchScript>().IdentifyDisc();
         if (player1 == transform.parent.GetComponent<CatchScript>().GetPlayerType())
         {
             transform.parent.GetComponent<CatchScript>().IncrementScore(pointValue);
@@ -205,6 +207,7 @@ public class DiscScript : MonoBehaviour
         {
             GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
         }
+        
     }
 
     void FlyingState()
@@ -228,6 +231,14 @@ public class DiscScript : MonoBehaviour
         if (initialForce > initialForceMin)
         {
             initialForce -= Time.deltaTime * 200;
+        }
+        if (transform.parent != null)
+        {
+            if (transform.parent.GetComponent<CatchScript>().GetThrow() == true)
+            {
+                transform.parent.GetComponent<CatchScript>().SetThrowFalse();
+                ThrowDisc();
+            }
         }
     }
 
@@ -255,6 +266,10 @@ public class DiscScript : MonoBehaviour
             {
                 discRigidbody.AddForce(transform.forward * incrementForce/*, ForceMode.Impulse*/);
             }
+        }
+        if (other.tag == "CatchBox")
+        {
+            CatchDisc(other.transform);
         } 
     }
 

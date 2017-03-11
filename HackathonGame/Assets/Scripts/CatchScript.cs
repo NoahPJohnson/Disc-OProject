@@ -5,12 +5,8 @@ using UnityEngine.UI;
 
 public class CatchScript : MonoBehaviour
 {
-    [SerializeField] Transform catchableDisc;
     [SerializeField] Transform caughtDisc;
     [SerializeField] GameObject visualization;
-    DiscScript discScript;
-
-    //[SerializeField] Text scoreDisplay;
     [SerializeField] GameObject gameStateManager;
     GameStateScript gameStateScript;
 
@@ -20,7 +16,8 @@ public class CatchScript : MonoBehaviour
     [SerializeField] float recoveryTime;
     [SerializeField] bool ableToCatch;
     [SerializeField] bool holdingDisc;
-    [SerializeField] bool discInBox;
+    [SerializeField] bool throwSignal;
+    [SerializeField] bool throwAttempted;
     float time;
 
     public bool gamePaused;
@@ -30,97 +27,44 @@ public class CatchScript : MonoBehaviour
     {
         gameStateScript = gameStateManager.GetComponent<GameStateScript>();
         IdentifyDisc();
-        discInBox = false;
+        throwSignal = false;
         holdingDisc = true;
         ableToCatch = false;
         time = 0;
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        /*if (gamePaused == false)
-        {
-            if (player1 == true)
-            {
-                if (Input.GetButtonDown("Fire1Player1"))
-                {
-                    AttemptCatch();
-                }
-
-                if (Input.GetButtonUp("Fire1Player1"))
-                {
-                    AttemptThrow();
-                }
-            }
-            else
-            {
-                if (Input.GetButtonDown("Fire1Player2"))
-                {
-                    AttemptCatch();
-                }
-
-                if (Input.GetButtonUp("Fire1Player2"))
-                {
-                    AttemptThrow();
-                }
-            }
-        }*/
-        if (ableToCatch == false && holdingDisc == false)
-        {
-            time += Time.deltaTime;
-            if (time > recoveryTime)
-            {
-                ableToCatch = true;
-                visualization.SetActive(true);
-                time = 0;
-            }
-        }
-	}
+        GetComponent<Collider>().enabled = false;
+    }
 
     public void AttemptCatch()
     {
         if (ableToCatch == true)
         {
             ableToCatch = false;
+            throwSignal = false;
             visualization.SetActive(false);
             //Debug.Log("Catch Attempted.");
-            if (discInBox == true)
-            {
-                if (discScript != null)
-                {
-                    discScript.CatchDisc(transform);
-                    discInBox = false;
-                    holdingDisc = true;
-                    IdentifyDisc();
-                    visualization.SetActive(true);
-                    gameStateScript.UpdateScore(player1, score);
-                    //scoreDisplay.text = score.ToString();
-                    //Debug.Log("Success, disk is: " + caughtDisc);
-                }
-            }
+            StartCoroutine("ActivateCatchBox");
         }
     }
 
     public void AttemptThrow()
     {
+        throwSignal = true;
         if (holdingDisc == true && transform.childCount > 1)
         {
-            discScript.ThrowDisc();
+            //discScript.ThrowDisc();
+            throwAttempted = true;
             caughtDisc = null;
-            discScript = null;
+            //discScript = null;
             holdingDisc = false;
+            StartCoroutine("DisableCatch");
             visualization.SetActive(false);
         }
     }
 
-    void IdentifyDisc()
+    public void IdentifyDisc()
     {
+        holdingDisc = true;
         caughtDisc = transform.GetChild(1);
-        if (caughtDisc != null)
-        {
-            discScript = caughtDisc.GetComponent<DiscScript>();
-        }
     }
 
     public bool GetPlayerType()
@@ -133,14 +77,26 @@ public class CatchScript : MonoBehaviour
         score += increment;
     }
 
+
     public int GetScore()
     {
         return score;
     }
 
+    public bool GetThrow()
+    {
+        return throwAttempted;
+    }
+
+    public void SetThrowFalse()
+    {
+        throwAttempted = false;
+    }
+
+    //Function called by game state manager to increment point values.
     public void ResetValues()
     {
-        discInBox = false;
+        throwSignal = false;
         holdingDisc = true;
         IdentifyDisc();
         visualization.SetActive(true);
@@ -148,29 +104,28 @@ public class CatchScript : MonoBehaviour
         time = 0;
     }
 
-    void OnTriggerEnter(Collider disc)
+    //Coroutine for handling the time interval that the catchBox is active for
+    IEnumerator ActivateCatchBox()
     {
-        if (disc.tag == "Disc")
+        GetComponent<Collider>().enabled = true;
+        yield return new WaitForSeconds(.2f);
+        GetComponent<Collider>().enabled = false;
+        StartCoroutine("DisableCatch");
+        if (throwSignal == true)
         {
-            if (ableToCatch == true)
-            {
-                catchableDisc = disc.transform;
-                discScript = catchableDisc.GetComponent<DiscScript>();
-                discInBox = true;
-            }
+            AttemptThrow();
+            throwSignal = false;
         }
     }
-
-    void OnTriggerExit(Collider disc)
+    
+    //Coroutine for handling the time interval between catch attempts
+    IEnumerator DisableCatch()
     {
-        if (disc.tag == "Disc")
-        {
-            if (ableToCatch == true && holdingDisc == false)
-            {
-                catchableDisc = null;
-                discScript = null;
-                discInBox = false;
-            }
-        }
-    }
+        ableToCatch = false;
+        visualization.SetActive(false);
+        yield return new WaitForSeconds(.4f);
+        ableToCatch = true;
+        visualization.SetActive(true);
+        //Debug.Log(ableToCatch);
+    } 
 }
