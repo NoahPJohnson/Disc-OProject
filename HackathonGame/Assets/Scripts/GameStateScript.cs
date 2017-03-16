@@ -162,6 +162,14 @@ public class GameStateScript : MonoBehaviour
         }
     }
 
+    public void CheckScore(int scoreToCheck, Transform winningPlayer)
+    {
+        if (scoreToCheck > scoreMax)
+        {
+            //winningPlayer is winner
+        }
+    }
+
     void PauseGame()
     {
         if (Input.GetButtonDown("Pause1") || Input.GetButtonDown("Pause2"))

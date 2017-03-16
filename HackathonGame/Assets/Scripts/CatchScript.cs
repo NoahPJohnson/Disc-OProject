@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CatchScript : MonoBehaviour
 {
+    [SerializeField] ScoreTracker scoreTracker;
     [SerializeField] Transform caughtDisc;
     [SerializeField] GameObject visualization;
     [SerializeField] GameObject gameStateManager;
@@ -26,6 +27,7 @@ public class CatchScript : MonoBehaviour
 	void Start ()
     {
         gameStateScript = gameStateManager.GetComponent<GameStateScript>();
+        scoreTracker = new ScoreTracker(transform);
         IdentifyDisc();
         throwSignal = false;
         holdingDisc = true;
@@ -72,9 +74,9 @@ public class CatchScript : MonoBehaviour
         return player1;
     }
 
-    public void IncrementScore(int increment)
+    public void Score(int increment)
     {
-        score += increment;
+        scoreTracker.UpdateScore(increment);
     }
 
 
@@ -109,6 +111,7 @@ public class CatchScript : MonoBehaviour
     {
         GetComponent<Collider>().enabled = true;
         yield return new WaitForSeconds(.2f);
+        //Debug.Log("Catch is ACTIVE.");
         GetComponent<Collider>().enabled = false;
         StartCoroutine("DisableCatch");
         if (throwSignal == true)

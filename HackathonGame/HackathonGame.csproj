@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\PlayerRotationInterface.cs" />
     <Compile Include="Assets\Scripts\PlayerRotationScript.cs" />
     <Compile Include="Assets\Scripts\PlayerRotationType1.cs" />
+    <Compile Include="Assets\Scripts\ScoreTracker.cs" />
     <Compile Include="Assets\Scripts\TeleporterScript.cs" />
   </ItemGroup>
   <ItemGroup>

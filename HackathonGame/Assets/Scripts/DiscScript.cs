@@ -144,7 +144,7 @@ public class DiscScript : MonoBehaviour
         catchBox.GetComponent<CatchScript>().IdentifyDisc();
         if (player1 == transform.parent.GetComponent<CatchScript>().GetPlayerType())
         {
-            transform.parent.GetComponent<CatchScript>().IncrementScore(pointValue);
+            transform.parent.GetComponent<CatchScript>().Score(pointValue);
             if (player1 == true)
             {
                 if (pointValue <= 1)
@@ -195,7 +195,7 @@ public class DiscScript : MonoBehaviour
         
         transform.localPosition = new Vector3(0, 0, 1);
         transform.forward = transform.parent.forward;
-        initialForce = discRigidbody.velocity.magnitude * 100/3;
+        initialForce = discRigidbody.velocity.magnitude * 50;
         discRigidbody.velocity = Vector3.zero;
         discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
         player1 = transform.parent.GetComponent<CatchScript>().GetPlayerType();
@@ -228,13 +228,13 @@ public class DiscScript : MonoBehaviour
 
     void CaughtState()
     {
-        if (initialForce > initialForceMin)
+        if (initialForce > initialForceMin && transform.parent.GetComponent<Collider>().enabled == false)
         {
             initialForce -= Time.deltaTime * 200;
         }
         if (transform.parent != null)
         {
-            if (transform.parent.GetComponent<CatchScript>().GetThrow() == true)
+            if (transform.parent.GetComponent<CatchScript>().GetThrow() == true && transform.parent.GetComponent<Collider>().enabled == false)
             {
                 transform.parent.GetComponent<CatchScript>().SetThrowFalse();
                 ThrowDisc();
