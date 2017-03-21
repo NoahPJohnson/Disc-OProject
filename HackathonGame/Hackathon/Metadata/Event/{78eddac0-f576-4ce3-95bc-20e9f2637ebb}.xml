@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.01.09.00">
     <object class="Event" id="{78eddac0-f576-4ce3-95bc-20e9f2637ebb}">
         <property name="name">
-            <value>P1 2 pt</value>
+            <value>2 pt</value>
         </property>
         <property name="outputFormat">
             <value>1</value>
@@ -60,7 +60,7 @@
     <object class="MarkerTrack" id="{4e75b511-a89f-4030-8df5-da8e708cc129}"/>
     <object class="GroupTrack" id="{4e17a2cd-6616-40e9-86aa-84cb3b45884e}">
         <relationship name="modules">
-            <destination>{65278eeb-de77-479d-92b6-2d426e73366f}</destination>
+            <destination>{0861bad3-58cf-4326-8b41-fc219ba93aa2}</destination>
         </relationship>
         <relationship name="mixerGroup">
             <destination>{b92dd094-ed25-4e97-bdeb-0b3183a7b8b7}</destination>
@@ -68,7 +68,7 @@
     </object>
     <object class="Timeline" id="{e0e94a60-7b58-4aa6-998c-adb39c409738}">
         <relationship name="modules">
-            <destination>{65278eeb-de77-479d-92b6-2d426e73366f}</destination>
+            <destination>{0861bad3-58cf-4326-8b41-fc219ba93aa2}</destination>
         </relationship>
     </object>
     <object class="EventMixerMaster" id="{686d3d74-09ec-4e37-80d3-9c7e2fe660af}">
@@ -88,12 +88,15 @@
         </relationship>
     </object>
     <object class="MixerBusPanner" id="{368aa658-a9eb-4f3b-89cf-78d61a4cf15a}"/>
-    <object class="SingleSound" id="{65278eeb-de77-479d-92b6-2d426e73366f}">
+    <object class="SingleSound" id="{0861bad3-58cf-4326-8b41-fc219ba93aa2}">
         <property name="length">
-            <value>2.8124943310657597</value>
+            <value>1.4000000000000001</value>
+        </property>
+        <property name="timelockedOffset">
+            <value>0.051150000000000015</value>
         </property>
         <relationship name="audioFile">
-            <destination>{d5aa33e5-e368-4eed-91c8-9a676363aee5}</destination>
+            <destination>{7d125c65-41a3-4b6f-b2ef-37bfa2728c31}</destination>
         </relationship>
     </object>
     <object class="EventMixerGroup" id="{b92dd094-ed25-4e97-bdeb-0b3183a7b8b7}">

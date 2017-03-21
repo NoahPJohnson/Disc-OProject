@@ -25,7 +25,7 @@ public class DiscScript : MonoBehaviour
     FMOD.Studio.EventInstance wallHitEvent;
 
     //Player 1 Scores
-    [FMODUnity.EventRef]
+    /*[FMODUnity.EventRef]
     [SerializeField] string p1pt1EffectName = "event:/Cues/P1 1 pt";
     FMOD.Studio.EventInstance score1Pt1Event;
 
@@ -39,11 +39,11 @@ public class DiscScript : MonoBehaviour
 
     [FMODUnity.EventRef]
     [SerializeField] string p1pt8EffectName = "event:/Cues/P1 8 pt";
-    FMOD.Studio.EventInstance score1Pt8Event;
+    FMOD.Studio.EventInstance score1Pt8Event;*/
 
 
     //Player 2 Scores
-    [FMODUnity.EventRef]
+    /*[FMODUnity.EventRef]
     [SerializeField] string p2pt1EffectName = "event:/Cues/P2 1 pt";
     FMOD.Studio.EventInstance score2Pt1Event;
 
@@ -57,7 +57,7 @@ public class DiscScript : MonoBehaviour
 
     [FMODUnity.EventRef]
     [SerializeField] string p2pt8EffectName = "event:/Cues/P2 8 pt";
-    FMOD.Studio.EventInstance score2Pt8Event;
+    FMOD.Studio.EventInstance score2Pt8Event;*/
 
 
     [FMODUnity.EventRef]
@@ -77,7 +77,7 @@ public class DiscScript : MonoBehaviour
         //contact1Event = FMODUnity.RuntimeManager.CreateInstance(contact1EffectName);
         //contact2Event = FMODUnity.RuntimeManager.CreateInstance(contact2EffectName);
 
-        score1Pt1Event = FMODUnity.RuntimeManager.CreateInstance(p1pt1EffectName);
+        /*score1Pt1Event = FMODUnity.RuntimeManager.CreateInstance(p1pt1EffectName);
         score1Pt2Event = FMODUnity.RuntimeManager.CreateInstance(p1pt2EffectName);
         score1Pt4Event = FMODUnity.RuntimeManager.CreateInstance(p1pt4EffectName);
         score1Pt8Event = FMODUnity.RuntimeManager.CreateInstance(p1pt8EffectName);
@@ -85,7 +85,7 @@ public class DiscScript : MonoBehaviour
         score2Pt1Event = FMODUnity.RuntimeManager.CreateInstance(p2pt1EffectName);
         score2Pt2Event = FMODUnity.RuntimeManager.CreateInstance(p2pt2EffectName);
         score2Pt4Event = FMODUnity.RuntimeManager.CreateInstance(p2pt4EffectName);
-        score2Pt8Event = FMODUnity.RuntimeManager.CreateInstance(p2pt8EffectName);
+        score2Pt8Event = FMODUnity.RuntimeManager.CreateInstance(p2pt8EffectName);*/
 
         goalEvent = FMODUnity.RuntimeManager.CreateInstance(goalEffectName);
 
@@ -147,7 +147,7 @@ public class DiscScript : MonoBehaviour
             transform.parent.GetComponent<CatchScript>().Score(pointValue);
             if (player1 == true)
             {
-                if (pointValue <= 1)
+                /*if (pointValue <= 1)
                 {
                     score1Pt1Event.start();
                 }
@@ -162,11 +162,11 @@ public class DiscScript : MonoBehaviour
                 else if (pointValue == 8)
                 {
                     score1Pt8Event.start();
-                }
+                }*/
             }
             else
             {
-                if (pointValue <= 1)
+                /*if (pointValue <= 1)
                 {
                     score2Pt1Event.start();
                 }
@@ -181,7 +181,7 @@ public class DiscScript : MonoBehaviour
                 else if (pointValue == 8)
                 {
                     score2Pt8Event.start();
-                }
+                }*/
             }
             pointValue = 0;
             discDisplay.text = pointValue.ToString();

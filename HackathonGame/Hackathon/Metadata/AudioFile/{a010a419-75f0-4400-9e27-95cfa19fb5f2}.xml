@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.09.00">
+    <object class="AudioFile" id="{a010a419-75f0-4400-9e27-95cfa19fb5f2}">
+        <property name="assetPath">
+            <value>BuildSynth.mp3</value>
+        </property>
+        <property name="isStreaming">
+            <value>true</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>16.06530612244898</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{f2b8750a-b654-4b50-a9e9-0d93c71d9ef8}</destination>
+        </relationship>
+    </object>
+</objects>

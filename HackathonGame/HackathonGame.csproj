@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Assets\GoogleVR\Scripts\Audio\FmodGvrAudio.cs" />
     <Compile Include="Assets\GoogleVR\Scripts\Audio\FmodGvrAudioRoom.cs" />
+    <Compile Include="Assets\MusicManagerScript.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
+    <Compile Include="Assets\ScoreDisplayScript.cs" />
     <Compile Include="Assets\Scripts\CatchScript.cs" />
     <Compile Include="Assets\Scripts\DiscPointValueScript.cs" />
     <Compile Include="Assets\Scripts\DiscScript.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementInterface.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementType1.cs" />
+    <Compile Include="Assets\Scripts\PlayerPauseInterface.cs" />
+    <Compile Include="Assets\Scripts\PlayerPauseType1.cs" />
     <Compile Include="Assets\Scripts\PlayerRotationInterface.cs" />
     <Compile Include="Assets\Scripts\PlayerRotationScript.cs" />
     <Compile Include="Assets\Scripts\PlayerRotationType1.cs" />
