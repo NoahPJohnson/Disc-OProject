@@ -8,15 +8,15 @@ public class TeleporterScript : MonoBehaviour
     [SerializeField] int offset;
     //[SerializeField] Vector3 newPosition;
 
-    [FMODUnity.EventRef]
+    /*[FMODUnity.EventRef]
     [SerializeField]
     string portalEffectName = "event:/Cues/Passing Through Portal";
-    FMOD.Studio.EventInstance portalEvent;
+    FMOD.Studio.EventInstance portalEvent;*/
 
     // Use this for initialization
     void Start ()
     {
-        portalEvent = FMODUnity.RuntimeManager.CreateInstance(portalEffectName);
+        //portalEvent = FMODUnity.RuntimeManager.CreateInstance(portalEffectName);
 	}
 	
 	// Update is called once per frame
@@ -31,7 +31,7 @@ public class TeleporterScript : MonoBehaviour
         {
             //Debug.Log("TELEPORT");
             disc.transform.position = new Vector3(otherTeleporter.position.x + offset, disc.transform.position.y, disc.transform.position.z);
-            portalEvent.start();
+            //portalEvent.start();
         }
     }
 }

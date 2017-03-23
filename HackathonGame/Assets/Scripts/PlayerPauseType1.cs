@@ -7,7 +7,10 @@ public class PlayerPauseType1 : PlayerPauseInterface
     GameStateScript gameStateScript;
     public void Pause(bool buttonDown)
     {
-        gameStateScript.PauseGame();
+        if (buttonDown == true)
+        {
+            gameStateScript.PauseGame();
+        }
     }
 
     public void IdentifyGameStateManager(Transform gameStateManager)

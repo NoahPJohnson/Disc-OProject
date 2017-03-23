@@ -29,7 +29,7 @@ public class GameStateScript : MonoBehaviour
     float timer = 0;
 
     [SerializeField] GameObject TitleScreen;
-    Image TitleScreenBackground;
+    [SerializeField] Image TitleScreenBackground;
     [SerializeField] GameObject TitleScreenElements;
     [SerializeField] GameObject PauseScreen;
 
@@ -40,9 +40,9 @@ public class GameStateScript : MonoBehaviour
     {
         players = new ArrayList();
         AddPlayer(debugPlayerToAdd1);
-        AddPlayer(debugPlayerToAdd1);
+        AddPlayer(debugPlayerToAdd2);
         PauseScreen.SetActive(false);
-        TitleScreenBackground = TitleScreen.GetComponent<Image>();
+        //TitleScreenBackground = TitleScreen.GetComponent<Image>();
         //paused = true;
         Time.timeScale = 0;
 	}
@@ -50,7 +50,7 @@ public class GameStateScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        PauseGame();
+        //PauseGame();
         UpdateTimer();
 	}
 
@@ -65,7 +65,7 @@ public class GameStateScript : MonoBehaviour
     public void AddPlayer(Transform playerToAdd)
     {
         players.Add(playerToAdd);
-        discs.Add(playerToAdd.GetChild(1));
+        //discs.Add(playerToAdd.GetChild(1));
     } 
 
     public void PauseGame()
@@ -103,14 +103,14 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreen.SetActive(true);
             }
-            while (TitleScreenBackground.color.a > 0)
+            while (TitleScreenBackground.color.a < 1)
             {
                 Color fadeColor = TitleScreenBackground.color;
-                fadeColor.a -= Time.deltaTime;
+                fadeColor.a += Time.deltaTime;
                 TitleScreenBackground.color = fadeColor;
                 yield return null;
             }
-            if (TitleScreenElements.activeSelf == false)
+            if (TitleScreenElements.activeSelf == false && TitleScreenBackground.color.a >= 1)
             {
                 TitleScreenElements.SetActive(true);
             }
@@ -122,14 +122,14 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreenElements.SetActive(false);
             }
-            while (TitleScreenBackground.color.a < 1)
+            while (TitleScreenBackground.color.a > 0)
             {
                 Color fadeColor = TitleScreenBackground.color;
-                fadeColor.a += Time.deltaTime;
+                fadeColor.a -= Time.deltaTime;
                 TitleScreenBackground.color = fadeColor;
                 yield return null;
             }
-            if (TitleScreen.activeSelf == true)
+            if (TitleScreen.activeSelf == true && TitleScreenBackground.color.a <= 1)
             {
                 TitleScreen.SetActive(false);
             }
