@@ -10,8 +10,7 @@ public class MusicManagerScript : MonoBehaviour
     [SerializeField] bool tied;
 
     [FMODUnity.EventRef]
-    [SerializeField]
-    string musicTrackName = "event:/Music/Music";
+    [SerializeField] string musicTrackName = "event:/Music/Music";
     FMOD.Studio.EventInstance musicEvent;
     FMOD.Studio.ParameterInstance pauseMenu;
     FMOD.Studio.ParameterInstance points;
@@ -29,7 +28,8 @@ public class MusicManagerScript : MonoBehaviour
         pauseMenu.setValue(0f);
         points.setValue(0);
         themeDecision.setValue(1f);
-        tied = true; 
+        tied = true;
+        musicEvent.start();
     }
 	
     public void UpdateTheme (int[] scoreArray)
@@ -70,6 +70,18 @@ public class MusicManagerScript : MonoBehaviour
         else
         {
             pauseMenu.setValue(0f);
+        }
+    }
+
+    public void SetInGame(bool inGameValue)
+    {
+        if (inGameValue == true)
+        {
+            inGame.setValue(1f);
+        }
+        else
+        {
+            inGame.setValue(0f);
         }
     }
 }

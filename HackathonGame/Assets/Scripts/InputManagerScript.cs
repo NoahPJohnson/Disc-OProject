@@ -6,6 +6,13 @@ public class InputManagerScript : MonoBehaviour
 {
     //[SerializeField] int playerCount = 2;
     [SerializeField] string horizontalAxisName;
+    [SerializeField] string verticalAxisName;
+    [SerializeField] string hTurmAxisName;
+    [SerializeField] string vTurnAxisName;
+    [SerializeField] string button1Name;
+    [SerializeField] string pauseButtonName;
+    [SerializeField] string button2Name;
+
     [SerializeField] CharacterController playerController;
     [SerializeField] Transform playerRotationTransform;
     [SerializeField] PlayerMovementInterface movementInterface;
@@ -26,11 +33,11 @@ public class InputManagerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        movementInterface.Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        rotationInterface.Rotate(Input.GetAxis("RightStick X"), Input.GetAxis("RightStick Y"));
-        catchInterface.Catch(Input.GetButtonDown("Fire1Player1"));
-        catchInterface.Throw(Input.GetButtonUp("Fire1Player1"));
-        pauseInterface.Pause(Input.GetButtonDown("Pause1"));
+        movementInterface.Move(Input.GetAxis(horizontalAxisName), Input.GetAxis(verticalAxisName));
+        rotationInterface.Rotate(Input.GetAxis(hTurmAxisName), Input.GetAxis(vTurnAxisName));
+        catchInterface.Catch(Input.GetButtonDown(button1Name));
+        catchInterface.Throw(Input.GetButtonUp(button1Name));
+        pauseInterface.Pause(Input.GetButtonDown(pauseButtonName));
 	}
 
     void SetInterfaceType(PlayerMovementInterface moveType, PlayerRotationInterface rotationType, PlayerCatchReleaseInterface catchType, PlayerPauseInterface pauseType)

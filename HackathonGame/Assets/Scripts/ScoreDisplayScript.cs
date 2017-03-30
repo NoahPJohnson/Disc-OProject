@@ -20,6 +20,7 @@ public class ScoreDisplayScript : MonoBehaviour
         //playerScoreSliders = new Slider[4];
         players = new ArrayList();
         AddPlayer(debugPlayerToAdd);
+        AddPlayer(debugPlayerToAdd2);
     }
 
     public void AddPlayer(Transform playerToAdd)
@@ -30,6 +31,7 @@ public class ScoreDisplayScript : MonoBehaviour
     public void UpdateDisplay(int scoreValue, Transform scoringPlayer)
     {
         playerIndex = players.IndexOf(scoringPlayer);
+        GetComponent<MusicManagerScript>().UpdateTheme(playerScoreValues);
         if (playerIndex > -1)
         {
             playerScoreCounters[playerIndex].text = scoreValue.ToString();

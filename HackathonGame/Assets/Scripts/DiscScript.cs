@@ -7,7 +7,7 @@ public class DiscScript : MonoBehaviour
 {
     [SerializeField] Text discDisplay;
 
-    [SerializeField] bool player1;
+    [SerializeField] Transform playerOwner;
     [SerializeField] bool caught;
     [SerializeField] float speed;
     [SerializeField] float speedMax;
@@ -52,15 +52,9 @@ public class DiscScript : MonoBehaviour
         discCollider = GetComponent<CapsuleCollider>();
         caught = true;
         pointValue = 0;
-        player1 = transform.parent.GetComponent<CatchScript>().GetPlayerType();
-        if (player1 == true)
-        {
-            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.red);
-        }
-        else
-        {
-            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
-        }
+        playerOwner = transform.parent;
+        GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
+
         Physics.IgnoreLayerCollision(12, 8, true);
     }
 	
@@ -96,44 +90,44 @@ public class DiscScript : MonoBehaviour
     public void CatchDisc(Transform catchBox)
     {
         //Debug.Log("Disc is caught!!");
-        caught = true;
-        discCollider.enabled = false;
-        transform.parent = catchBox;
-        catchBox.GetComponent<CatchScript>().IdentifyDisc();
-        if (player1 == transform.parent.GetComponent<CatchScript>().GetPlayerType())
+        if (catchBox.childCount < 2)
         {
-            transform.parent.GetComponent<CatchScript>().Score(pointValue);
-            if (player1 == true)
+            caught = true;
+            discCollider.enabled = false;
+            transform.parent = catchBox;
+            catchBox.GetComponent<CatchScript>().IdentifyDisc();
+            if (playerOwner == transform.parent)
             {
+                transform.parent.GetComponent<CatchScript>().Score(pointValue);
                 scoreEventValue.setValue(pointValue);
                 scoreEvent.start();
+                pointValue = 0;
+                discDisplay.text = pointValue.ToString();
+
             }
-            pointValue = 0;
-            discDisplay.text = pointValue.ToString();
-            
+            else
+            {
+                discEventValue.setValue(2f);
+                discEvent.start();
+            }
+
+
+            transform.localPosition = new Vector3(0, 0, 1);
+            transform.forward = transform.parent.forward;
+            initialForce = discRigidbody.velocity.magnitude * 50;
+            discRigidbody.velocity = Vector3.zero;
+            discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+            playerOwner = transform.parent;
+            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
+            /*if (playerOwner.GetComponent<CatchScript>().GetPlayerType() == true)
+            {
+                GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.red);
+            }
+            else
+            {
+                GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
+            }*/
         }
-        else
-        {
-            discEventValue.setValue(2f);
-            discEvent.start();
-        }
-        
-        
-        transform.localPosition = new Vector3(0, 0, 1);
-        transform.forward = transform.parent.forward;
-        initialForce = discRigidbody.velocity.magnitude * 50;
-        discRigidbody.velocity = Vector3.zero;
-        discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-        player1 = transform.parent.GetComponent<CatchScript>().GetPlayerType();
-        if (player1 == true)
-        {
-            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.red);
-        }
-        else
-        {
-            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
-        }
-        
     }
 
     void FlyingState()
@@ -173,6 +167,13 @@ public class DiscScript : MonoBehaviour
         pointValue = valuePoints;
         initialForce = valueInitialForce;
     }
+
+    public void ResetDiscValues(Transform catchBox)
+    {
+        pointValue = 0;
+        initialForce = 500;
+        CatchDisc(catchBox);
+    } 
 
     void OnTriggerEnter(Collider other)
     {

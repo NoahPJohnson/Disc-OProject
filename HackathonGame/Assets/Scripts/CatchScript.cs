@@ -11,7 +11,11 @@ public class CatchScript : MonoBehaviour
     [SerializeField] GameObject gameStateManager;
     GameStateScript gameStateScript;
 
-    [SerializeField] bool player1;
+    [SerializeField] Vector3 startPosition;
+    [SerializeField] Vector3 startRotation;
+
+    //[SerializeField] bool player1;
+    [SerializeField] Color playerColor;
     [SerializeField] int score;
 
     [SerializeField] float recoveryTime;
@@ -69,9 +73,14 @@ public class CatchScript : MonoBehaviour
         caughtDisc = transform.GetChild(1);
     }
 
-    public bool GetPlayerType()
+    /*public bool GetPlayerType()
     {
         return player1;
+    }*/
+
+    public Color GetPlayerColor()
+    {
+        return playerColor;
     }
 
     public void Score(int increment)
@@ -98,6 +107,10 @@ public class CatchScript : MonoBehaviour
     //Function called by game state manager to increment point values.
     public void ResetValues()
     {
+        transform.localRotation = Quaternion.Euler(startRotation);
+        transform.parent.position = startPosition;
+        //transform.parent.rotation = Quaternion.Euler(startRotation);
+        scoreTracker.ResetScore();
         throwSignal = false;
         holdingDisc = true;
         IdentifyDisc();

@@ -27,4 +27,10 @@ class ScoreTracker
         scoreDisplayScript.UpdateDisplay(playerScore, assignedPlayer);
         gameStateManagerScript.CheckScore(playerScore, assignedPlayer);
     }
+
+    public void ResetScore()
+    {
+        playerScore = 0;
+        scoreDisplayScript.UpdateDisplay(playerScore, assignedPlayer);
+    }
 }

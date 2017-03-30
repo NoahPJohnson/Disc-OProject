@@ -24,6 +24,7 @@ public class GameStateScript : MonoBehaviour
     //[SerializeField] Transform catchBox1;
     //[SerializeField] Transform catchBox2;
 
+    [SerializeField] int countDownStart = 120;
     [SerializeField] int countDown = 100;
     [SerializeField] float timeInterval = 1;
     float timer = 0;
@@ -32,6 +33,8 @@ public class GameStateScript : MonoBehaviour
     [SerializeField] Image TitleScreenBackground;
     [SerializeField] GameObject TitleScreenElements;
     [SerializeField] GameObject PauseScreen;
+
+    [SerializeField] GameObject InputManager;
 
     [SerializeField] Text timerDisplay;
 
@@ -42,22 +45,18 @@ public class GameStateScript : MonoBehaviour
         AddPlayer(debugPlayerToAdd1);
         AddPlayer(debugPlayerToAdd2);
         PauseScreen.SetActive(false);
+        InputManager.SetActive(false);
         //TitleScreenBackground = TitleScreen.GetComponent<Image>();
         //paused = true;
         Time.timeScale = 0;
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        //PauseGame();
-        UpdateTimer();
 	}
 
     public void CheckScore(int scoreToCheck, Transform winningPlayer)
     {
         if (scoreToCheck > scoreMax)
         {
+            EndGame();
+            //EndGame
             //winningPlayer is winner
         }
     }
@@ -84,21 +83,29 @@ public class GameStateScript : MonoBehaviour
         }
     }
 
-    void UpdateTimer()
+    IEnumerator CountDownTimer()
     {
-        timer += Time.deltaTime;
-        if (timer > timeInterval && countDown > 0)
+        while (countDown > 0)
         {
-            timer = 0;
-            countDown--;
-            timerDisplay.text = countDown.ToString();
+            timer += Time.deltaTime;
+            if (timer > timeInterval && countDown > 0)
+            {
+                timer = 0;
+                countDown--;
+                timerDisplay.text = countDown.ToString();
+            }
+            yield return 0;
         }
+        EndGame();
+        StopCoroutine(CountDownTimer());
+        //EndGame
     }
 
     IEnumerator FadeTitleScreen(bool fadeIn)
     {
         if (fadeIn == true)
         {
+            //GetComponent<MusicManagerScript>().SetInGame(false);
             if (TitleScreen.activeSelf == false)
             {
                 TitleScreen.SetActive(true);
@@ -118,6 +125,7 @@ public class GameStateScript : MonoBehaviour
         }
         else
         {
+            GetComponent<MusicManagerScript>().SetInGame(true);
             if (TitleScreenElements.activeSelf == true)
             {
                 TitleScreenElements.SetActive(false);
@@ -133,13 +141,26 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreen.SetActive(false);
             }
-            Time.timeScale = 1f;
+            //Time.timeScale = 1f;
+            StartCoroutine(StartGameCountDown());
         }        
+    }
+
+    IEnumerator StartGameCountDown()
+    {
+        //Turn Off Input Manager
+        
+        yield return new WaitForSeconds(3);
+        StartCoroutine(CountDownTimer());
+        InputManager.SetActive(true);
+        
     }
 
 
     public void StartGame()
     {
+        countDown = countDownStart;
+        timerDisplay.text = countDown.ToString();
         Time.timeScale = 1;
         paused = false;
         StartCoroutine(FadeTitleScreen(false));
@@ -177,6 +198,17 @@ public class GameStateScript : MonoBehaviour
         //catchBox2.GetComponent<CatchScript>().ResetValues();
         //disc1.parent = player1;
         //disc2.parent = player2;
+
+        InputManager.SetActive(false);
+
+        GameObject[] catchBoxes = GameObject.FindGameObjectsWithTag("CatchBox");
+        GameObject[] discs = GameObject.FindGameObjectsWithTag("Disc");
+        for (int i = 0; i < discs.Length; i++)
+        {
+            discs[i].GetComponent<DiscScript>().ResetDiscValues(catchBoxes[i].transform);
+            catchBoxes[i].GetComponent<CatchScript>().ResetValues();
+        }
+        
     }
 
     public void ExitGame()
