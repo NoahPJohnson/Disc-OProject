@@ -17,6 +17,10 @@ public class DiscScript : MonoBehaviour
     [SerializeField] float initialForceMin;
     [SerializeField] int pointValue;
     [SerializeField] int pointMax;
+
+    [SerializeField] Vector3 flyVector;
+    [SerializeField] Vector3 spinVector;
+
     Rigidbody discRigidbody;
     Collider discCollider;
 
@@ -59,7 +63,7 @@ public class DiscScript : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	void FixedUpdate ()
+	void Update ()
     {
 		if (caught == true)
         {
@@ -84,7 +88,8 @@ public class DiscScript : MonoBehaviour
         discCollider.enabled = true;
         discRigidbody.constraints = RigidbodyConstraints.None;
         discRigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        discRigidbody.AddForce(transform.forward * speed/*, ForceMode.Impulse*/);
+        flyVector = Vector3.forward;
+        //discRigidbody.AddForce(transform.forward * speed/*, ForceMode.Impulse*/);
     }
 
     public void CatchDisc(Transform catchBox)
@@ -127,21 +132,23 @@ public class DiscScript : MonoBehaviour
             {
                 GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
             }*/
+            transform.forward = transform.parent.forward;
         }
     }
 
     void FlyingState()
     {
-        if (discRigidbody.velocity.magnitude < speedMin)
+        /*if (discRigidbody.velocity.magnitude < speedMin)
         {
             discRigidbody.velocity = transform.forward * speedMin;
         }
         if (discRigidbody.velocity.magnitude > speedMax)
         {
             discRigidbody.velocity = transform.forward * speedMax;
-        }
-        transform.forward = discRigidbody.velocity;
-        speed = discRigidbody.velocity.magnitude;
+        }*/
+        transform.Translate((flyVector /*+ spinVector*/) * speed * Time.deltaTime);
+        //transform.forward = discRigidbody.velocity;
+        //speed = discRigidbody.velocity.magnitude;
         //discRigidbody.AddForce(Vector3.forward * speed, ForceMode.Impulse);
         //transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
@@ -192,7 +199,8 @@ public class DiscScript : MonoBehaviour
             }
             if (speed < speedMax)
             {
-                discRigidbody.AddForce(transform.forward * incrementForce/*, ForceMode.Impulse*/);
+                //discRigidbody.AddForce(transform.forward * incrementForce/*, ForceMode.Impulse*/);
+                speed += incrementForce;
             }
         }
         if (other.tag == "CatchBox")
@@ -203,10 +211,12 @@ public class DiscScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.collider.tag == "Wall")
+        if (other.collider.tag == "Wall" || other.collider.tag == "Disc" || other.collider.tag == "Player1" || other.collider.tag == "Player2")
         {
             discEventValue.setValue(7f);
             discEvent.start();
+            flyVector = Vector3.Reflect((flyVector*speed*Time.deltaTime).normalized*-1, other.contacts[0].normal);
+            //Debug.Log("Reflect is stupid: " + (flyVector * speed*Time.deltaTime).normalized*-1 + " reflected by " + other.contacts[0].normal + " = " + flyVector);
         }
     }
 }
