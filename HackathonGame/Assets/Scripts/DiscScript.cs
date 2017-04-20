@@ -10,8 +10,11 @@ public class DiscScript : MonoBehaviour
     [SerializeField] Transform playerOwner;
     [SerializeField] bool caught;
     [SerializeField] float speed;
+    [SerializeField] float spinFactor;
+    [SerializeField] float spinDecay;
     [SerializeField] float speedMax;
     [SerializeField] float speedMin;
+    [SerializeField] float speedDecay;
     [SerializeField] float incrementForce;
     [SerializeField] float initialForce;
     [SerializeField] float initialForceMin;
@@ -20,6 +23,7 @@ public class DiscScript : MonoBehaviour
 
     [SerializeField] Vector3 flyVector;
     [SerializeField] Vector3 spinVector;
+    [SerializeField] Vector3 lockVector;
 
     Rigidbody discRigidbody;
     Collider discCollider;
@@ -58,6 +62,7 @@ public class DiscScript : MonoBehaviour
         pointValue = 0;
         playerOwner = transform.parent;
         GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
+        lockVector = new Vector3(1, 0, 1);
 
         Physics.IgnoreLayerCollision(12, 8, true);
     }
@@ -77,7 +82,9 @@ public class DiscScript : MonoBehaviour
 
     public void ThrowDisc()
     {
-        
+        //flyVector = transform.parent.rotation.eulerAngles.normalized;
+        spinFactor = transform.parent.GetComponent<PlayerRotationScript>().GetRevFactor();
+        spinVector = new Vector3(0, spinFactor, 0);
         transform.parent = null;
         if (initialForce < initialForceMin)
         {
@@ -89,6 +96,7 @@ public class DiscScript : MonoBehaviour
         discRigidbody.constraints = RigidbodyConstraints.None;
         discRigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         flyVector = Vector3.forward;
+        //flyVector = transform.TransformDirection(flyVector);
         //discRigidbody.AddForce(transform.forward * speed/*, ForceMode.Impulse*/);
     }
 
@@ -119,7 +127,8 @@ public class DiscScript : MonoBehaviour
 
             transform.localPosition = new Vector3(0, 0, 1);
             transform.forward = transform.parent.forward;
-            initialForce = discRigidbody.velocity.magnitude * 50;
+            initialForce = speed;
+            transform.parent.GetComponent<PlayerRotationScript>().SetRevFactor(spinVector.y);
             discRigidbody.velocity = Vector3.zero;
             discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             playerOwner = transform.parent;
@@ -146,7 +155,11 @@ public class DiscScript : MonoBehaviour
         {
             discRigidbody.velocity = transform.forward * speedMax;
         }*/
-        transform.Translate((flyVector /*+ spinVector*/) * speed * Time.deltaTime);
+        speed = Mathf.Clamp(speed, speedMin, speedMax);
+        flyVector = Vector3.Scale(flyVector, lockVector);
+        
+        transform.Rotate(spinVector*Time.deltaTime);
+        transform.Translate((flyVector) * speed * Time.deltaTime);
         //transform.forward = discRigidbody.velocity;
         //speed = discRigidbody.velocity.magnitude;
         //discRigidbody.AddForce(Vector3.forward * speed, ForceMode.Impulse);
@@ -157,7 +170,7 @@ public class DiscScript : MonoBehaviour
     {
         if (initialForce > initialForceMin && transform.parent.GetComponent<Collider>().enabled == false)
         {
-            initialForce -= Time.deltaTime * 200;
+            initialForce -= speedDecay * Time.deltaTime;
         }
         if (transform.parent != null)
         {
@@ -178,7 +191,7 @@ public class DiscScript : MonoBehaviour
     public void ResetDiscValues(Transform catchBox)
     {
         pointValue = 0;
-        initialForce = 500;
+        initialForce = initialForceMin;
         CatchDisc(catchBox);
     } 
 
@@ -215,7 +228,9 @@ public class DiscScript : MonoBehaviour
         {
             discEventValue.setValue(7f);
             discEvent.start();
-            flyVector = Vector3.Reflect((flyVector*speed*Time.deltaTime).normalized*-1, other.contacts[0].normal);
+            spinVector *= spinDecay;
+            transform.forward = Vector3.Reflect(transform.forward.normalized, other.contacts[0].normal);
+            transform.forward = Vector3.Scale(transform.forward, lockVector);
             //Debug.Log("Reflect is stupid: " + (flyVector * speed*Time.deltaTime).normalized*-1 + " reflected by " + other.contacts[0].normal + " = " + flyVector);
         }
     }

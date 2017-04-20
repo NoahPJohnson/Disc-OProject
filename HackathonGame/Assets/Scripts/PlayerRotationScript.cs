@@ -6,8 +6,12 @@ public class PlayerRotationScript : MonoBehaviour
 {
     //[SerializeField] Transform revMeasure;
     [SerializeField] float revFactor;
+    [SerializeField] float revSpeed;
     [SerializeField] float revThreshhold = 1f;
-
+    [SerializeField] float revMax;
+    [SerializeField] float revMin;
+    [SerializeField] float resetRevTime;
+    float timer;
     //float rotationDirection = 1f;
 
     //[SerializeField] float angleDifferenceDirection = 1f;
@@ -43,11 +47,28 @@ public class PlayerRotationScript : MonoBehaviour
         oldAdjustedRotationAngle = adjustedRotationAngle;
         if (Mathf.Abs(deltaAdjustedRotationAngle) > revThreshhold)
         {
-            revFactor += deltaAdjustedRotationAngle;
+            revFactor += deltaAdjustedRotationAngle*revSpeed*Time.deltaTime;
+            timer = 0;
         }
         else
         {
-            revFactor = 0;
+            timer += Time.deltaTime;
+            if (timer > resetRevTime)
+            {
+                revFactor = 0;
+            }
         }
+        revFactor = Mathf.Clamp(revFactor, revMin, revMax);
+    }
+
+    public float GetRevFactor()
+    {
+        return revFactor;
+    }
+
+    public void SetRevFactor(float revValue)
+    {
+        revFactor += revValue;
+        Debug.Log("starting rev factor = " + revFactor);
     }
 }
