@@ -7,6 +7,9 @@ public class MusicManagerScript : MonoBehaviour
     [SerializeField] int playerCount = 2;
     [SerializeField] int totalScore = 0;
     [SerializeField] int leadScoreIndex = 0;
+    [SerializeField] float coolHighlightDelay;
+    float timer;
+    [SerializeField] bool coolHighlightDisabled;
     [SerializeField] bool tied;
 
     [FMODUnity.EventRef]
@@ -25,10 +28,7 @@ public class MusicManagerScript : MonoBehaviour
         musicEvent.getParameter("Points", out points);
         musicEvent.getParameter("In/Out Of Game", out inGame);
         musicEvent.getParameter("Theme Vs", out themeDecision);
-        pauseMenu.setValue(0f);
-        points.setValue(0);
-        themeDecision.setValue(1f);
-        tied = true;
+        ResetMusicValues();
         musicEvent.start();
     }
 	
@@ -83,5 +83,43 @@ public class MusicManagerScript : MonoBehaviour
         {
             inGame.setValue(0f);
         }
+    }
+
+    public void PlayCoolHighlight(Transform player)
+    {
+        if (player.tag == "Player1" && coolHighlightDisabled == false)
+        {
+            //Play Highlight for P1
+            coolHighlightDisabled = true;
+            StartCoroutine(CoolHighlightDelayTime());
+        }
+        else
+        {
+            //Highlight P2
+            coolHighlightDisabled = true;
+            StartCoroutine(CoolHighlightDelayTime());
+        }
+    }
+
+    IEnumerator CoolHighlightDelayTime()
+    {
+        while (coolHighlightDisabled == true)
+        {
+            timer += Time.deltaTime;
+            if (timer > coolHighlightDelay)
+            {
+                coolHighlightDisabled = false;
+            }
+            yield return null;
+        }
+    }
+
+
+    public void ResetMusicValues()
+    {
+        pauseMenu.setValue(0f);
+        points.setValue(0);
+        themeDecision.setValue(1f);
+        tied = true;
     }
 }

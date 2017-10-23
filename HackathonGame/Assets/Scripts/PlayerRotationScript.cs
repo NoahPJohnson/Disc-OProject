@@ -66,9 +66,14 @@ public class PlayerRotationScript : MonoBehaviour
         return revFactor;
     }
 
+    public float GetRevMax()
+    {
+        return revMax;
+    }
+
     public void SetRevFactor(float revValue)
     {
         revFactor += revValue;
-        Debug.Log("starting rev factor = " + revFactor);
+        //Debug.Log("starting rev factor = " + revFactor);
     }
 }

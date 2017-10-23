@@ -11,10 +11,12 @@ public class DiscScript : MonoBehaviour
     [SerializeField] bool caught;
     [SerializeField] float speed;
     [SerializeField] float spinFactor;
+    [SerializeField] float spinMax;
     [SerializeField] float spinDecay;
     [SerializeField] float speedMax;
     [SerializeField] float speedMin;
     [SerializeField] float speedDecay;
+    [SerializeField] float bounceDecay;
     [SerializeField] float incrementForce;
     [SerializeField] float initialForce;
     [SerializeField] float initialForceMin;
@@ -114,16 +116,14 @@ public class DiscScript : MonoBehaviour
                 transform.parent.GetComponent<CatchScript>().Score(pointValue);
                 scoreEventValue.setValue(pointValue);
                 scoreEvent.start();
-                pointValue = 0;
-                discDisplay.text = pointValue.ToString();
-
             }
             else
             {
                 discEventValue.setValue(2f);
                 discEvent.start();
             }
-
+            pointValue = 0;
+            discDisplay.text = pointValue.ToString();
 
             transform.localPosition = new Vector3(0, 0, 1);
             transform.forward = transform.parent.forward;
@@ -192,8 +192,18 @@ public class DiscScript : MonoBehaviour
     {
         pointValue = 0;
         initialForce = initialForceMin;
+        ThrowDisc();
         CatchDisc(catchBox);
     } 
+
+    void DidACoolThing()
+    {
+        if (speed > speedMax - 1 || Mathf.Abs(spinFactor) > spinMax - 1)
+        {
+            //Signal Music Manager    
+        }
+    }
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -229,6 +239,10 @@ public class DiscScript : MonoBehaviour
             discEventValue.setValue(7f);
             discEvent.start();
             spinVector *= spinDecay;
+            if (speed > speedMin)
+            {
+                speed -= 1;
+            }
             transform.forward = Vector3.Reflect(transform.forward.normalized, other.contacts[0].normal);
             transform.forward = Vector3.Scale(transform.forward, lockVector);
             //Debug.Log("Reflect is stupid: " + (flyVector * speed*Time.deltaTime).normalized*-1 + " reflected by " + other.contacts[0].normal + " = " + flyVector);

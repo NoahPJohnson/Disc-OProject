@@ -30,6 +30,7 @@ public class GameStateScript : MonoBehaviour
     float timer = 0;
 
     [SerializeField] GameObject TitleScreen;
+    [SerializeField] GameObject OptionsScreen;
     [SerializeField] Image TitleScreenBackground;
     [SerializeField] GameObject TitleScreenElements;
     [SerializeField] GameObject PauseScreen;
@@ -45,7 +46,7 @@ public class GameStateScript : MonoBehaviour
         AddPlayer(debugPlayerToAdd1);
         AddPlayer(debugPlayerToAdd2);
         PauseScreen.SetActive(false);
-        InputManager.SetActive(false);
+        InputManager.GetComponent<InputManagerScript>().SetInputManagerActive(false);
         //TitleScreenBackground = TitleScreen.GetComponent<Image>();
         //paused = true;
         Time.timeScale = 0;
@@ -53,7 +54,7 @@ public class GameStateScript : MonoBehaviour
 
     public void CheckScore(int scoreToCheck, Transform winningPlayer)
     {
-        if (scoreToCheck > scoreMax)
+        if (scoreToCheck >= scoreMax)
         {
             EndGame();
             //EndGame
@@ -73,12 +74,14 @@ public class GameStateScript : MonoBehaviour
         {
             Time.timeScale = 0;
             PauseScreen.SetActive(true);
+            GetComponent<MusicManagerScript>().SetPaused(true);
             paused = true;
         }
         else
         {
             Time.timeScale = 1;
             PauseScreen.SetActive(false);
+            GetComponent<MusicManagerScript>().SetPaused(false);
             paused = false;
         }
     }
@@ -97,7 +100,6 @@ public class GameStateScript : MonoBehaviour
             yield return 0;
         }
         EndGame();
-        StopCoroutine(CountDownTimer());
         //EndGame
     }
 
@@ -140,6 +142,7 @@ public class GameStateScript : MonoBehaviour
             if (TitleScreen.activeSelf == true && TitleScreenBackground.color.a <= 1)
             {
                 TitleScreen.SetActive(false);
+                OptionsScreen.SetActive(false);
             }
             //Time.timeScale = 1f;
             StartCoroutine(StartGameCountDown());
@@ -152,8 +155,8 @@ public class GameStateScript : MonoBehaviour
         
         yield return new WaitForSeconds(3);
         StartCoroutine(CountDownTimer());
-        InputManager.SetActive(true);
-        
+        InputManager.GetComponent<InputManagerScript>().SetInputManagerActive(true);
+
     }
 
 
@@ -163,11 +166,13 @@ public class GameStateScript : MonoBehaviour
         timerDisplay.text = countDown.ToString();
         Time.timeScale = 1;
         paused = false;
+        GetComponent<MusicManagerScript>().ResetMusicValues();
         StartCoroutine(FadeTitleScreen(false));
     }
 
     public void EndGame()
     {
+        StopCoroutine(CountDownTimer());
         StartCoroutine(FadeTitleScreen(true));
         ResetGame();
     }
@@ -199,7 +204,7 @@ public class GameStateScript : MonoBehaviour
         //disc1.parent = player1;
         //disc2.parent = player2;
 
-        InputManager.SetActive(false);
+        InputManager.GetComponent<InputManagerScript>().SetInputManagerActive(false);
 
         GameObject[] catchBoxes = GameObject.FindGameObjectsWithTag("CatchBox");
         GameObject[] discs = GameObject.FindGameObjectsWithTag("Disc");

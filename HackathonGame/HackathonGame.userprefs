@@ -1,8 +1,9 @@
 ﻿<Properties StartupItem="HackathonGame.Plugins.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ScoreDisplayScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\InputManagerScript.cs">
     <Files>
-      <File FileName="Assets\ScoreDisplayScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CatchScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\InputManagerScript.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
