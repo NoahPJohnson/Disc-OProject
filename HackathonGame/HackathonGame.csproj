@@ -115,6 +115,8 @@
     <Compile Include="Assets\Scripts\RotationTrackerUIScript.cs" />
     <Compile Include="Assets\Scripts\ScoreDisplayScript.cs" />
     <Compile Include="Assets\Scripts\ScoreTracker.cs" />
+    <Compile Include="Assets\Scripts\SelectIndexScript.cs" />
+    <Compile Include="Assets\Scripts\SwapPlayerOptions.cs" />
     <Compile Include="Assets\Scripts\TeleporterScript.cs" />
   </ItemGroup>
   <ItemGroup>

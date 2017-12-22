@@ -12,13 +12,16 @@ public class InputManagerScript : MonoBehaviour
     [SerializeField] int controllerNumber = 1;
     [SerializeField] bool inputManagerActive;
     [SerializeField] int inputDevice;
-    [SerializeField] string horizontalAxisName;
-    [SerializeField] string verticalAxisName;
-    [SerializeField] string hTurmAxisName;
-    [SerializeField] string vTurnAxisName;
-    [SerializeField] string button1Name;
-    [SerializeField] string pauseButtonName;
-    [SerializeField] string button2Name;
+    [SerializeField] string horizontalAxisName = "Horizontal1";
+    [SerializeField] string verticalAxisName = "Vertical1";
+    [SerializeField] string hTurnAxisName = "RightStick X1";
+    [SerializeField] string vTurnAxisName = "RightStick Y1";
+    [SerializeField] string button1Name = "Fire1Player1";
+    [SerializeField] string pauseButtonName = "Pause1";
+    [SerializeField] string[] hAxisArray;
+    [SerializeField] string[] vAxisArray;
+    [SerializeField] string[] buttonArray;
+
 
     [SerializeField] Transform optionsParent;
     [SerializeField] CharacterController playerController;
@@ -28,33 +31,40 @@ public class InputManagerScript : MonoBehaviour
     [SerializeField] PlayerCatchReleaseInterface catchInterface;
     [SerializeField] PlayerPauseInterface pauseInterface;
 
+    [SerializeField] GameObject selectorObject;
+    [SerializeField] GameObject[] buttonSelectorArray;
+    [SerializeField] GameObject controllerGroup;
+    [SerializeField] GameObject keyboardGroup;
+
 	// Use this for initialization
 	void Start ()
     {
         if (Input.GetJoystickNames().Length == 0)
         {
             inputDevice = 0;
-            SetDefaultControlsKeyboard();
+            selectorObject.GetComponent<SelectIndexScript>().SetIndex(0);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType2(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }
         else if (Input.GetJoystickNames().Length >= 1 && controllerNumber == 1)
         {
             inputDevice = 1;
-            SetDefaultControlsController1();
+            selectorObject.GetComponent<SelectIndexScript>().SetIndex(1);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }
         else if (Input.GetJoystickNames().Length == 2 && controllerNumber == 2)
         {
             inputDevice = 2;
-            SetDefaultControlsController2();
+            selectorObject.GetComponent<SelectIndexScript>().SetIndex(2);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }
         else if (Input.GetJoystickNames().Length == 1 && controllerNumber == 2)
         {
             inputDevice = 0;
-            SetDefaultControlsKeyboard();
+            selectorObject.GetComponent<SelectIndexScript>().SetIndex(0);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType2(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }
+        SetDefaultControls();
+        ChangeInputDisplay();
         //movementInterface = moveType1;
         movementInterface.IdentifyPlayer(playerController);
         rotationInterface.IdentifyPlayer(playerRotationTransform);
@@ -70,7 +80,7 @@ public class InputManagerScript : MonoBehaviour
             if (inputDevice == 0)
             {
                 movementInterface.Move(Input.GetKey(inputsDictionary["MoveUp"]), Input.GetKey(inputsDictionary["MoveLeft"]), Input.GetKey(inputsDictionary["MoveDown"]), Input.GetKey(inputsDictionary["MoveRight"])/*Input.GetAxis(horizontalAxisName), Input.GetAxis(verticalAxisName)*/);
-                rotationInterface.Rotate(Input.GetAxis(hTurmAxisName), Input.GetAxis(vTurnAxisName));
+                rotationInterface.Rotate(Input.GetAxis(hTurnAxisName), Input.GetAxis(vTurnAxisName));
                 catchInterface.Catch(Input.GetKeyDown(inputsDictionary["ThrowAndCatch"]));
                 catchInterface.Throw(Input.GetKeyUp(inputsDictionary["ThrowAndCatch"]));
                 pauseInterface.Pause(Input.GetKeyDown(inputsDictionary["Pause"]));
@@ -78,7 +88,7 @@ public class InputManagerScript : MonoBehaviour
             else
             {
                 movementInterface.Move(Input.GetAxis(horizontalAxisName), Input.GetAxis(verticalAxisName));
-                rotationInterface.Rotate(Input.GetAxis(hTurmAxisName), Input.GetAxis(vTurnAxisName));
+                rotationInterface.Rotate(Input.GetAxis(hTurnAxisName), Input.GetAxis(vTurnAxisName));
                 catchInterface.Catch(Input.GetButtonDown(button1Name));
                 catchInterface.Throw(Input.GetButtonUp(button1Name));
                 pauseInterface.Pause(Input.GetButtonDown(pauseButtonName));
@@ -109,6 +119,28 @@ public class InputManagerScript : MonoBehaviour
         //Debug.Log("Button: " + buttonActivated);
     }
 
+    public void ChangeButton(int index)
+    {
+        if (index == 0)
+        {
+            horizontalAxisName = hAxisArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+            verticalAxisName = vAxisArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+        }
+        else if (index == 1)
+        {
+            hTurnAxisName = hAxisArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+            vTurnAxisName = vAxisArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+        }
+        else if (index == 2)
+        {
+            button1Name = buttonArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+        }
+        else if (index == 3)
+        {
+            pauseButtonName = buttonArray[buttonSelectorArray[index].GetComponent<SelectIndexScript>().GetIndex()];
+        }
+    }
+
     void SetInterfaceType(PlayerMovementInterface moveType, PlayerRotationInterface rotationType, PlayerCatchReleaseInterface catchType, PlayerPauseInterface pauseType)
     {
         movementInterface = moveType;
@@ -121,7 +153,7 @@ public class InputManagerScript : MonoBehaviour
     {
         horizontalAxisName = horizontalAxis;
         verticalAxisName = verticalAxis;
-        hTurmAxisName = hTurmAxis;
+        hTurnAxisName = hTurmAxis;
         vTurnAxisName = vTurnAxis;
         button1Name = button1;
         pauseButtonName = pauseButton;
@@ -132,36 +164,134 @@ public class InputManagerScript : MonoBehaviour
         inputManagerActive = setting;
     }
 
-    public void SetDefaultControlsKeyboard()
+    public void SetDefaultControls()
     {
-        inputsDictionary.Add("MoveUp", KeyCode.W);
-        inputsDictionary.Add("MoveLeft", KeyCode.A);
-        inputsDictionary.Add("MoveDown", KeyCode.S);
-        inputsDictionary.Add("MoveRight", KeyCode.D);
-        inputsDictionary.Add("ThrowAndCatch", KeyCode.Mouse0);
-        inputsDictionary.Add("Pause", KeyCode.Escape);
-        for (int i = 1; i < optionsParent.childCount; i++)
+        if (controllerGroup.transform.parent.gameObject.activeSelf == true || keyboardGroup.transform.parent.gameObject.activeSelf == true)
         {
-            optionsParent.GetChild(i).GetChild(0).GetComponent<Text>().text = inputsDictionary[optionsParent.GetChild(i).name].ToString();
+            if (inputDevice == 0)
+            {
+                if (inputsDictionary.ContainsKey("MoveUp") == false)
+                {
+                    inputsDictionary.Add("MoveUp", KeyCode.W);
+                    inputsDictionary.Add("MoveLeft", KeyCode.A);
+                    inputsDictionary.Add("MoveDown", KeyCode.S);
+                    inputsDictionary.Add("MoveRight", KeyCode.D);
+                    inputsDictionary.Add("ThrowAndCatch", KeyCode.Mouse0);
+                    inputsDictionary.Add("Pause", KeyCode.Escape);
+                }
+                else
+                {
+                    inputsDictionary["MoveUp"] = KeyCode.W;
+                    inputsDictionary["MoveLeft"] = KeyCode.A;
+                    inputsDictionary["MoveDown"] = KeyCode.S;
+                    inputsDictionary["MoveRight"] = KeyCode.D;
+                    inputsDictionary["ThrowAndCatch"] = KeyCode.Mouse0;
+                    inputsDictionary["Pause"] = KeyCode.Escape;
+                }
+                for (int i = 0; i < optionsParent.childCount; i++)
+                {
+                    optionsParent.GetChild(i).GetChild(0).GetComponent<Text>().text = inputsDictionary[optionsParent.GetChild(i).name].ToString();
+                }
+            }
+            else
+            {
+                buttonSelectorArray[0].GetComponent<SelectIndexScript>().SetIndex(0);
+                horizontalAxisName = hAxisArray[buttonSelectorArray[0].GetComponent<SelectIndexScript>().GetIndex()];
+                verticalAxisName = vAxisArray[buttonSelectorArray[0].GetComponent<SelectIndexScript>().GetIndex()];
+                buttonSelectorArray[1].GetComponent<SelectIndexScript>().SetIndex(2);
+                hTurnAxisName = hAxisArray[buttonSelectorArray[1].GetComponent<SelectIndexScript>().GetIndex()];
+                vTurnAxisName = vAxisArray[buttonSelectorArray[1].GetComponent<SelectIndexScript>().GetIndex()];
+                buttonSelectorArray[2].GetComponent<SelectIndexScript>().SetIndex(6);
+                button1Name = buttonArray[buttonSelectorArray[2].GetComponent<SelectIndexScript>().GetIndex()];
+                buttonSelectorArray[3].GetComponent<SelectIndexScript>().SetIndex(5);
+                pauseButtonName = buttonArray[buttonSelectorArray[3].GetComponent<SelectIndexScript>().GetIndex()];
+                if (inputDevice == 2)
+                {
+                    SwitchControllers(true);
+                }
+                else
+                {
+                    SwitchControllers(false);
+                }
+            }
         }
     }
 
-    public void SetDefaultControlsController1()
+    void SwitchControllers(bool controller1)
     {
-
+        if (controller1 == true)
+        {
+            controller1 = false;
+            for (int i = 0; i < buttonArray.Length; i ++)
+            {
+                buttonArray[i] = buttonArray[i].Remove(buttonArray[i].Length-1);
+                buttonArray[i] = buttonArray[i].Insert(buttonArray[i].Length, "2");
+            }
+            for (int i = 0; i < hAxisArray.Length; i++)
+            {
+                hAxisArray[i] = hAxisArray[i].Remove(hAxisArray[i].Length-1);
+                hAxisArray[i] = hAxisArray[i].Insert(hAxisArray[i].Length, "2");
+                vAxisArray[i] = vAxisArray[i].Remove(vAxisArray[i].Length-1);
+                vAxisArray[i] = vAxisArray[i].Insert(vAxisArray[i].Length, "2");
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                ChangeButton(i);
+            }
+        }
+        else
+        {
+            controller1 = true;
+            for (int i = 0; i < buttonArray.Length; i++)
+            {
+                buttonArray[i] = buttonArray[i].Remove(buttonArray[i].Length-1);
+                buttonArray[i] = buttonArray[i].Insert(buttonArray[i].Length, "1");
+            }
+            for (int i = 0; i < hAxisArray.Length; i++)
+            {
+                hAxisArray[i] = hAxisArray[i].Remove(hAxisArray[i].Length-1);
+                hAxisArray[i] = hAxisArray[i].Insert(hAxisArray[i].Length, "1");
+                vAxisArray[i] = vAxisArray[i].Remove(vAxisArray[i].Length-1);
+                vAxisArray[i] = vAxisArray[i].Insert(vAxisArray[i].Length, "1");
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                ChangeButton(i);
+            }
+        }
     }
 
-    public void SetDefaultControlsController2()
+    public void ChangeInputDisplay()
     {
-
+        if (inputDevice == 0 && controllerGroup.activeSelf == true)
+        {
+            keyboardGroup.SetActive(true);
+            controllerGroup.SetActive(false);
+        }
+        else if (inputDevice != 0 && controllerGroup.activeSelf == false)
+        {
+            keyboardGroup.SetActive(false);
+            controllerGroup.SetActive(true);
+        }
     }
 
-    public void SetInputDevice()
+    public void ChangeInputDevice()
     {
-        //No two input managers can have same device
-        //Keyboard, controller 1, controller 2
-
+        inputDevice = selectorObject.GetComponent<SelectIndexScript>().GetIndex();
+        SetDefaultControls();
+        ChangeInputDisplay();
+        if (inputDevice == 0)
+        {
+            rotationInterface = new PlayerRotationType2();
+        }
+        else
+        {
+            rotationInterface = new PlayerRotationType1();
+        }
+        rotationInterface.IdentifyPlayer(playerRotationTransform);
     }
+
+    
 
     public int GetInputDevice()
     {
@@ -182,7 +312,7 @@ public class InputManagerScript : MonoBehaviour
 
     void SetHTurnAxis(string hTurnAxis)
     {
-        hTurmAxisName = hTurnAxis;
+        hTurnAxisName = hTurnAxis;
     }
 
     void SetVTurnAxis(string vTurnAxis)

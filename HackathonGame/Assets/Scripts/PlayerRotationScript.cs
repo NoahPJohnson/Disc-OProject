@@ -71,6 +71,12 @@ public class PlayerRotationScript : MonoBehaviour
         return revMax;
     }
 
+    public void SetRevMax(float newMax)
+    {
+        revMax = newMax;
+        revMin = -revMax;
+    }
+
     public void SetRevFactor(float revValue)
     {
         revFactor += revValue;

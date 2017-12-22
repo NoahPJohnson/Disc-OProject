@@ -21,7 +21,7 @@ public class CatchScript : MonoBehaviour
 
     [SerializeField] float recoveryTime;
     [SerializeField] bool ableToCatch;
-    [SerializeField] bool holdingDisc;
+    public bool holdingDisc;
     [SerializeField] bool throwSignal;
     [SerializeField] bool throwAttempted;
     float time;
@@ -84,6 +84,16 @@ public class CatchScript : MonoBehaviour
         return playerColor;
     }
 
+    public void SetPlayerColor(Color newColor)
+    {
+        playerColor = newColor;
+    }
+
+    public void SetPlayerStats(float sliderValue)
+    {
+
+    }
+
     public void Score(int increment)
     {
         scoreTracker.UpdateScore(increment);
@@ -127,7 +137,6 @@ public class CatchScript : MonoBehaviour
         GetComponent<Collider>().enabled = true;
         visualization.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.green);
         yield return new WaitForSeconds(.2f);
-        //Debug.Log("Catch is ACTIVE.");
         GetComponent<Collider>().enabled = false;
         StartCoroutine("DisableCatch");
         if (throwSignal == true)

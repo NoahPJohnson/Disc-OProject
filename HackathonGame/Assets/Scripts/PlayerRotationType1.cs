@@ -14,7 +14,7 @@ public class PlayerRotationType1 : PlayerRotationInterface
     {
         if (Mathf.Abs(rightX) > .05 || Mathf.Abs(rightY) > .05)
         {
-            targetRotation = Quaternion.Euler(new Vector3(0, Mathf.Atan2(rightX, -rightY) * Mathf.Rad2Deg, 0));
+            targetRotation = Quaternion.Euler(new Vector3(0, Mathf.Atan2(rightX, rightY) * Mathf.Rad2Deg, 0));
             playerRotationAxis.rotation = Quaternion.RotateTowards(playerRotationAxis.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }

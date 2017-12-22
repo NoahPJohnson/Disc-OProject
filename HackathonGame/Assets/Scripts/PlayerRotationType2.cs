@@ -22,7 +22,6 @@ public class PlayerRotationType2 : PlayerRotationInterface
         {
             mouseVector.Set(hit.point.x-playerRotationAxis.position.x, 0, hit.point.z-playerRotationAxis.position.z);
             targetRotation.SetLookRotation(mouseVector);
-            //targetRotation = Quaternion.Euler(new Vector3(0, Mathf.Atan2(rightX, rightY) * Mathf.Rad2Deg, 0));
             playerRotationAxis.rotation = Quaternion.RotateTowards(playerRotationAxis.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
         

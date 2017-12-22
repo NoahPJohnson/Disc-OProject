@@ -23,6 +23,13 @@ public class DiscScript : MonoBehaviour
     [SerializeField] int pointValue;
     [SerializeField] int pointMax;
 
+    float defaultSpinMax = 60;
+    float defaultSpinDecay = .8f;
+    float defaultSpeedMax = 30;
+    float defaultSpeedMin = 5;
+    float defaultInitialForce = 5;
+    float defaultInitialForceMin = 5;
+
     [SerializeField] Vector3 flyVector;
     [SerializeField] Vector3 spinVector;
     [SerializeField] Vector3 lockVector;
@@ -63,6 +70,7 @@ public class DiscScript : MonoBehaviour
         caught = true;
         pointValue = 0;
         playerOwner = transform.parent;
+        playerOwner.GetComponent<PlayerRotationScript>().SetRevMax(spinMax);
         GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
         lockVector = new Vector3(1, 0, 1);
 
@@ -85,7 +93,7 @@ public class DiscScript : MonoBehaviour
     public void ThrowDisc()
     {
         //flyVector = transform.parent.rotation.eulerAngles.normalized;
-        spinFactor = transform.parent.GetComponent<PlayerRotationScript>().GetRevFactor();
+        spinFactor = playerOwner.GetComponent<PlayerRotationScript>().GetRevFactor();
         spinVector = new Vector3(0, spinFactor, 0);
         transform.parent = null;
         if (initialForce < initialForceMin)
@@ -113,7 +121,10 @@ public class DiscScript : MonoBehaviour
             catchBox.GetComponent<CatchScript>().IdentifyDisc();
             if (playerOwner == transform.parent)
             {
-                transform.parent.GetComponent<CatchScript>().Score(pointValue);
+                if (pointValue > 0)
+                {
+                    transform.parent.GetComponent<CatchScript>().Score(pointValue);
+                }
                 scoreEventValue.setValue(pointValue);
                 scoreEvent.start();
             }
@@ -124,11 +135,10 @@ public class DiscScript : MonoBehaviour
             }
             pointValue = 0;
             discDisplay.text = pointValue.ToString();
-
             transform.localPosition = new Vector3(0, 0, 1);
             transform.forward = transform.parent.forward;
             initialForce = speed;
-            transform.parent.GetComponent<PlayerRotationScript>().SetRevFactor(spinVector.y);
+            //transform.parent.GetComponent<PlayerRotationScript>().SetRevFactor(spinVector.y);
             discRigidbody.velocity = Vector3.zero;
             discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             playerOwner = transform.parent;
@@ -141,9 +151,46 @@ public class DiscScript : MonoBehaviour
             {
                 GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.blue);
             }*/
-            transform.forward = transform.parent.forward;
         }
     }
+
+    /*public void DebugCatchDisc(Transform catchBox)
+    {
+        //Debug.Log("Disc is caught!!");
+        if (catchBox.childCount < 2)
+        {
+            caught = true;
+            discCollider.enabled = false;
+            transform.parent = catchBox;
+            catchBox.GetComponent<CatchScript>().IdentifyDisc();
+            if (playerOwner == transform.parent)
+            {
+                if (pointValue > 0)
+                {
+                    transform.parent.GetComponent<CatchScript>().Score(pointValue);
+                }
+                scoreEventValue.setValue(pointValue);
+                scoreEvent.start();
+            }
+            else
+            {
+                discEventValue.setValue(2f);
+                discEvent.start();
+            }
+            pointValue = 0;
+            discDisplay.text = pointValue.ToString();
+            transform.localPosition = new Vector3(0, 0, 1);
+            Debug.Log(transform.name + " Parent: " + transform.parent);
+            transform.forward = transform.parent.forward;
+            initialForce = speed;
+            //transform.parent.GetComponent<PlayerRotationScript>().SetRevFactor(spinVector.y);
+            discRigidbody.velocity = Vector3.zero;
+            discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+            playerOwner = transform.parent;
+            GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
+            //transform.forward = transform.parent.forward;
+        }
+    }*/
 
     void FlyingState()
     {
@@ -182,19 +229,46 @@ public class DiscScript : MonoBehaviour
         }
     }
 
+    public void SetPointMax(int newMax)
+    {
+        pointMax = newMax;
+    }
+
     public void SetValues(int valuePoints, float valueInitialForce)
     {
         pointValue = valuePoints;
         initialForce = valueInitialForce;
     }
 
-    public void ResetDiscValues(Transform catchBox)
+    public void ResetDiscValues()
     {
         pointValue = 0;
         initialForce = initialForceMin;
         ThrowDisc();
+    }
+
+    public void ResetDiscValues2(Transform catchBox)
+    {
         CatchDisc(catchBox);
     } 
+
+    public void ChangeDiscStats(float slideValue)
+    {
+        spinMax = defaultSpinMax + (slideValue * 6);
+        spinDecay = defaultSpinDecay + (-slideValue * .05f);
+        initialForce = defaultInitialForce * (Mathf.Pow(5, (-slideValue/10)));
+        initialForceMin = speedMin = initialForce;
+        speedMax = defaultSpeedMax + (-slideValue * 2);
+    }
+
+    public void DefaultDiscStats()
+    {
+        spinMax = defaultSpinMax;
+        spinDecay = defaultSpinDecay;
+        initialForce = defaultInitialForce;
+        initialForceMin = speedMin = initialForce;
+        speedMax = defaultSpeedMax;
+    }
 
     void DidACoolThing()
     {
