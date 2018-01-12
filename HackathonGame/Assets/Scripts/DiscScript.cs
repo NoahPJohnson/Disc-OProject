@@ -138,7 +138,6 @@ public class DiscScript : MonoBehaviour
             transform.localPosition = new Vector3(0, 0, 1);
             transform.forward = transform.parent.forward;
             initialForce = speed;
-            //transform.parent.GetComponent<PlayerRotationScript>().SetRevFactor(spinVector.y);
             discRigidbody.velocity = Vector3.zero;
             discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             playerOwner = transform.parent;
@@ -204,9 +203,11 @@ public class DiscScript : MonoBehaviour
         }*/
         speed = Mathf.Clamp(speed, speedMin, speedMax);
         flyVector = Vector3.Scale(flyVector, lockVector);
-        
         transform.Rotate(spinVector*Time.deltaTime);
         transform.Translate((flyVector) * speed * Time.deltaTime);
+        //GetComponent<Rigidbody>().MoveRotation((spinVector) * Time.deltaTime);
+        //GetComponent<Rigidbody>().MovePosition((flyVector) * speed * Time.deltaTime);
+        
         //transform.forward = discRigidbody.velocity;
         //speed = discRigidbody.velocity.magnitude;
         //discRigidbody.AddForce(Vector3.forward * speed, ForceMode.Impulse);
@@ -238,6 +239,26 @@ public class DiscScript : MonoBehaviour
     {
         pointValue = valuePoints;
         initialForce = valueInitialForce;
+    }
+
+    public float GetInitialForce()
+    {
+        return initialForce;
+    }
+
+    public float GetPointValue()
+    {
+        return pointValue;
+    }
+
+    public Transform GetPlayerOwner()
+    {
+        return playerOwner;
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
     }
 
     public void ResetDiscValues()

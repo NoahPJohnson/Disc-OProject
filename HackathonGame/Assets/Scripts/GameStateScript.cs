@@ -44,9 +44,15 @@ public class GameStateScript : MonoBehaviour
 
     [SerializeField] GameObject InputManagerP1;
     [SerializeField] GameObject InputManagerP2;
+    Player2AIScript AIScript;
 
     [SerializeField] Text timerDisplay;
     Coroutine countdownCoroutine;
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
 
     // Use this for initialization
     void Start ()
@@ -69,6 +75,7 @@ public class GameStateScript : MonoBehaviour
         debugPlayerToAdd2.parent.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
         player1Stats.SetActive(false);
         player2Stats.SetActive(false);
+        AIScript = debugPlayerToAdd2.parent.GetComponent<Player2AIScript>();
         //Time.timeScale = 0;
 	}
 
@@ -110,18 +117,21 @@ public class GameStateScript : MonoBehaviour
 
     IEnumerator StartAnimation()
     {
+        PauseScreen.SetActive(true);
         debugPlayerToAdd1.parent.position = new Vector3(debugPlayerToAdd1.parent.position.x, debugPlayerToAdd1.parent.position.y, debugPlayerToAdd1.parent.position.z + 5);
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 14);
+        float tempIForce1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16);
         debugPlayerToAdd1.GetComponent<CatchScript>().AttemptThrow();
 
         debugPlayerToAdd2.parent.position = new Vector3(debugPlayerToAdd2.parent.position.x, debugPlayerToAdd2.parent.position.y, debugPlayerToAdd2.parent.position.z - 5);
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 14);
+        float tempIForce2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16);
         debugPlayerToAdd2.GetComponent<CatchScript>().AttemptThrow();
 
         while (debugPlayerToAdd1.parent.position.z > -5 && debugPlayerToAdd2.parent.position.z < 5)
         {
-            debugPlayerToAdd1.parent.Translate(Vector3.right * 7 * Time.deltaTime);
-            debugPlayerToAdd2.parent.Translate(Vector3.right * 7 * Time.deltaTime);
+            debugPlayerToAdd1.parent.Translate(Vector3.right * 7f * Time.deltaTime);
+            debugPlayerToAdd2.parent.Translate(Vector3.right * 7f * Time.deltaTime);
             yield return null;
         }
         while (debugPlayerToAdd1.GetComponent<CatchScript>().holdingDisc == false && debugPlayerToAdd2.GetComponent<CatchScript>().holdingDisc == false)
@@ -137,9 +147,9 @@ public class GameStateScript : MonoBehaviour
             debugPlayerToAdd2.parent.Translate(Vector3.left * 5 * Time.deltaTime);
             yield return null;
         }
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 5);
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 5);
-
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1);
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2);
+        PauseScreen.SetActive(false);
         yield return null;
     }
 
@@ -275,6 +285,7 @@ public class GameStateScript : MonoBehaviour
         countdownCoroutine = StartCoroutine(CountDownTimer());
         InputManagerP1.GetComponent<InputManagerScript>().SetInputManagerActive(true);
         InputManagerP2.GetComponent<InputManagerScript>().SetInputManagerActive(true);
+        AIScript.SetAIActive(true);
     }
 
     public void StartGame()
@@ -332,6 +343,7 @@ public class GameStateScript : MonoBehaviour
 
         InputManagerP1.GetComponent<InputManagerScript>().SetInputManagerActive(false);
         InputManagerP2.GetComponent<InputManagerScript>().SetInputManagerActive(false);
+        AIScript.SetAIActive(false);
 
         GameObject[] catchBoxes = GameObject.FindGameObjectsWithTag("CatchBox");
         GameObject[] discs = GameObject.FindGameObjectsWithTag("Disc");
@@ -374,8 +386,8 @@ public class GameStateScript : MonoBehaviour
 
     public void ChangeDiscScoreMax()
     {
-        debugPlayerToAdd1.GetChild(1).GetComponent<DiscScript>().SetPointMax(scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
-        debugPlayerToAdd2.GetChild(1).GetComponent<DiscScript>().SetPointMax(scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        debugPlayerToAdd1.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        debugPlayerToAdd2.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
     }
 
     public void ChangePlayer1Color(bool right)
@@ -403,8 +415,8 @@ public class GameStateScript : MonoBehaviour
     public void SetDefaultRules()
     {
         discScoreMaxSelector.GetComponent<SelectIndexScript>().SetIndex(1);
-        debugPlayerToAdd1.GetChild(1).GetComponent<DiscScript>().SetPointMax(scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
-        debugPlayerToAdd2.GetChild(1).GetComponent<DiscScript>().SetPointMax(scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        debugPlayerToAdd1.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        debugPlayerToAdd2.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
 
         scoreMaxSelector.GetComponent<SelectIndexScript>().SetIndex(1);
         scoreMax = scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()];

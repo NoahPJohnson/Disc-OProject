@@ -28,6 +28,8 @@ public class CatchScript : MonoBehaviour
 
     public bool gamePaused;
 
+    Coroutine disableCatchCoroutine;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -63,9 +65,14 @@ public class CatchScript : MonoBehaviour
             caughtDisc = null;
             //discScript = null;
             holdingDisc = false;
-            StartCoroutine("DisableCatch");
+            ableToCatch = false;
+            if (disableCatchCoroutine != null)
+            {
+                StopCoroutine(disableCatchCoroutine);
+            }
+            disableCatchCoroutine = StartCoroutine("DisableCatch");
             //visualization.SetActive(false);
-        }
+        }     
     }
 
     public void IdentifyDisc()
@@ -110,6 +117,16 @@ public class CatchScript : MonoBehaviour
         return throwAttempted;
     }
 
+    public bool GetAbleToCatch()
+    {
+        return ableToCatch;
+    }
+
+    public bool GetThrowAttempted()
+    {
+        return throwAttempted;
+    }
+
     public void SetThrowFalse()
     {
         throwAttempted = false;
@@ -138,21 +155,27 @@ public class CatchScript : MonoBehaviour
         visualization.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.green);
         yield return new WaitForSeconds(.2f);
         GetComponent<Collider>().enabled = false;
-        StartCoroutine("DisableCatch");
+
         if (throwSignal == true)
         {
             AttemptThrow();
             throwSignal = false;
         }
+        if (disableCatchCoroutine != null)
+        {
+            StopCoroutine(disableCatchCoroutine);
+        }
+        disableCatchCoroutine = StartCoroutine("DisableCatch");
     }
     
     //Coroutine for handling the time interval between catch attempts
     IEnumerator DisableCatch()
     {
-        ableToCatch = false;
+        
         visualization.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), Color.black);
+        
         //visualization.SetActive(false);
-        yield return new WaitForSeconds(.4f);
+        yield return new WaitForSeconds(recoveryTime);
         ableToCatch = true;
         visualization.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), catchboxColor);
         //visualization.SetActive(true);

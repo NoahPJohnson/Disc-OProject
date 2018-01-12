@@ -11,7 +11,9 @@ public class PlayerRotationScript : MonoBehaviour
     [SerializeField] float revMax;
     [SerializeField] float revMin;
     [SerializeField] float resetRevTime;
+    [SerializeField] float setRevTime = .1f;
     float timer;
+    float timer2;
     //float rotationDirection = 1f;
 
     //[SerializeField] float angleDifferenceDirection = 1f;
@@ -29,35 +31,49 @@ public class PlayerRotationScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        timer2 += Time.deltaTime; 
         adjustedRotationAngle = transform.rotation.eulerAngles.y;
         if (adjustedRotationAngle < 0)
         {
             adjustedRotationAngle += 180f;
         }
-        deltaAdjustedRotationAngle = (adjustedRotationAngle - oldAdjustedRotationAngle);
-        if (deltaAdjustedRotationAngle < -355)
+        
+        if (timer2 > setRevTime)
         {
-            deltaAdjustedRotationAngle = ((adjustedRotationAngle + 360) - oldAdjustedRotationAngle);
-            //Debug.Log(deltaAdjustedRotationAngle);
-        }
-        else if (deltaAdjustedRotationAngle > 355)
-        {
-            deltaAdjustedRotationAngle = ((adjustedRotationAngle - 360) - oldAdjustedRotationAngle);
-        }
-        oldAdjustedRotationAngle = adjustedRotationAngle;
-        if (Mathf.Abs(deltaAdjustedRotationAngle) > revThreshhold)
-        {
-            revFactor += deltaAdjustedRotationAngle*revSpeed*Time.deltaTime;
-            timer = 0;
-        }
-        else
-        {
-            timer += Time.deltaTime;
-            if (timer > resetRevTime)
+            timer2 = 0;
+            deltaAdjustedRotationAngle = (adjustedRotationAngle - oldAdjustedRotationAngle);
+            if (deltaAdjustedRotationAngle < -355)
+            {
+                deltaAdjustedRotationAngle = ((adjustedRotationAngle + 360) - oldAdjustedRotationAngle);
+                //Debug.Log(deltaAdjustedRotationAngle);
+            }
+            else if (deltaAdjustedRotationAngle > 355)
+            {
+                deltaAdjustedRotationAngle = ((adjustedRotationAngle - 360) - oldAdjustedRotationAngle);
+            }
+            oldAdjustedRotationAngle = adjustedRotationAngle;
+            if (deltaAdjustedRotationAngle > revThreshhold)
+            {
+                revFactor += revSpeed * Time.deltaTime;
+                timer = 0;
+            }
+            else if (deltaAdjustedRotationAngle < -revThreshhold)
+            {
+                revFactor -= revSpeed * Time.deltaTime;
+                timer = 0;
+            }
+            else
             {
                 revFactor = 0;
+                /*timer += Time.deltaTime;
+                if (timer > resetRevTime)
+                {
+                    revFactor = 0;
+                }*/
             }
         }
+        
+        
         revFactor = Mathf.Clamp(revFactor, revMin, revMax);
     }
 
