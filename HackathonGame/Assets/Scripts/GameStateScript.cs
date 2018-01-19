@@ -27,6 +27,7 @@ public class GameStateScript : MonoBehaviour
     [SerializeField] GameObject player2Stats;
     [SerializeField] Image TitleScreenBackground;
     [SerializeField] GameObject TitleScreenElements;
+    [SerializeField] GameObject TransitionScreen;
     [SerializeField] GameObject PauseScreen;
 
     [SerializeField] GameObject mapSelector;
@@ -89,7 +90,19 @@ public class GameStateScript : MonoBehaviour
         }
     }
 
-    
+    public void EnableBotMode(bool botEnabled)
+    {
+        if (botEnabled == true)
+        {
+            InputManagerP2.GetComponent<InputManagerScript>().enabled = false;
+            debugPlayerToAdd2.parent.GetComponent<Player2AIScript>().enabled = true;
+        }
+        else
+        {
+            InputManagerP2.GetComponent<InputManagerScript>().enabled = true;
+            debugPlayerToAdd2.parent.GetComponent<Player2AIScript>().enabled = false;
+        }
+    }
 
     public void AddPlayer(Transform playerToAdd)
     {
@@ -103,6 +116,7 @@ public class GameStateScript : MonoBehaviour
         {
             Time.timeScale = 0;
             PauseScreen.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(PauseScreen.transform.GetChild(1).gameObject);
             GetComponent<MusicManagerScript>().SetPaused(true);
             paused = true;
         }
@@ -117,7 +131,8 @@ public class GameStateScript : MonoBehaviour
 
     IEnumerator StartAnimation()
     {
-        PauseScreen.SetActive(true);
+        TransitionScreen.transform.GetChild(0).GetComponent<Text>().text = "READY";
+        TransitionScreen.SetActive(true);
         debugPlayerToAdd1.parent.position = new Vector3(debugPlayerToAdd1.parent.position.x, debugPlayerToAdd1.parent.position.y, debugPlayerToAdd1.parent.position.z + 5);
         float tempIForce1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
         debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16);
@@ -136,20 +151,31 @@ public class GameStateScript : MonoBehaviour
         }
         while (debugPlayerToAdd1.GetComponent<CatchScript>().holdingDisc == false && debugPlayerToAdd2.GetComponent<CatchScript>().holdingDisc == false)
         {
-            
-            debugPlayerToAdd1.GetComponent<CatchScript>().AttemptCatch();
-            debugPlayerToAdd2.GetComponent<CatchScript>().AttemptCatch();
+            if ((GameObject.FindGameObjectsWithTag("Disc")[0].transform.position - debugPlayerToAdd1.position).magnitude < 10 || (GameObject.FindGameObjectsWithTag("Disc")[1].transform.position - debugPlayerToAdd2.position).magnitude < 10)
+            {
+                TransitionScreen.transform.GetChild(0).GetComponent<Text>().text = "SET";
+            }
+            if ((GameObject.FindGameObjectsWithTag("Disc")[0].transform.position - debugPlayerToAdd1.position).magnitude < 4 || (GameObject.FindGameObjectsWithTag("Disc")[1].transform.position - debugPlayerToAdd2.position).magnitude < 4)
+            {
+                debugPlayerToAdd1.GetComponent<CatchScript>().AttemptCatch();
+                debugPlayerToAdd2.GetComponent<CatchScript>().AttemptCatch();
+            }
             yield return null;
         }
+        TransitionScreen.transform.GetChild(0).GetComponent<Text>().text = "SET";
         while (debugPlayerToAdd1.parent.position.z < 0 && debugPlayerToAdd2.parent.position.z > 0)
         {
             debugPlayerToAdd1.parent.Translate(Vector3.left * 5 * Time.deltaTime);
             debugPlayerToAdd2.parent.Translate(Vector3.left * 5 * Time.deltaTime);
+            if (debugPlayerToAdd1.parent.position.z > -2 && debugPlayerToAdd2.parent.position.z < 2)
+            {
+                TransitionScreen.transform.GetChild(0).GetComponent<Text>().text = "GO";
+            }
             yield return null;
         }
         debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1);
         debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2);
-        PauseScreen.SetActive(false);
+        TransitionScreen.SetActive(false);
         yield return null;
     }
 
@@ -260,6 +286,7 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreenElements.SetActive(false);
             }
+            StartCoroutine(StartGameCountDown());
             while (TitleScreenBackground.color.a > 0)
             {
                 Color fadeColor = TitleScreenBackground.color;
@@ -272,8 +299,6 @@ public class GameStateScript : MonoBehaviour
                 TitleScreen.SetActive(false);
                 
             }
-            //Time.timeScale = 1f;
-            StartCoroutine(StartGameCountDown());
         }        
     }
 
@@ -281,7 +306,7 @@ public class GameStateScript : MonoBehaviour
     {
         //Turn Off Input Manager
         StartCoroutine(StartAnimation());
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(4.5f);
         countdownCoroutine = StartCoroutine(CountDownTimer());
         InputManagerP1.GetComponent<InputManagerScript>().SetInputManagerActive(true);
         InputManagerP2.GetComponent<InputManagerScript>().SetInputManagerActive(true);
@@ -306,6 +331,10 @@ public class GameStateScript : MonoBehaviour
 
     public void EndGame()
     {
+        Time.timeScale = 1;
+        PauseScreen.SetActive(false);
+        GetComponent<MusicManagerScript>().SetPaused(false);
+        paused = false;
         StopCoroutine(countdownCoroutine);
         Color winnerColor = GetComponent<ScoreDisplayScript>().DeclareWinner();
         winnerColor.a = 0;
@@ -349,6 +378,7 @@ public class GameStateScript : MonoBehaviour
         GameObject[] discs = GameObject.FindGameObjectsWithTag("Disc");
         for (int i = 0; i < discs.Length; i++)
         {
+            catchBoxes[i].GetComponent<CatchScript>().SetThrowSignalOff();
             discs[i].GetComponent<DiscScript>().ResetDiscValues();
         }
         for (int i = 0; i < discs.Length; i++)

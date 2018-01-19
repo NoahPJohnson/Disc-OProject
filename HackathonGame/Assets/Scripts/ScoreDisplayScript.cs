@@ -64,4 +64,9 @@ public class ScoreDisplayScript : MonoBehaviour
             playerScoreValues[playerIndex] = scoreValue;
         }
     }
+
+    public int GetPlayerScore(int index)
+    {
+        return playerScoreValues[index];
+    }
 }

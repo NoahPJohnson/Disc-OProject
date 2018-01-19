@@ -132,6 +132,11 @@ public class CatchScript : MonoBehaviour
         throwAttempted = false;
     }
 
+    public void SetThrowSignalOff()
+    {
+        throwSignal = false; 
+    }
+
     //Function called by game state manager to increment point values.
     public void ResetValues()
     {

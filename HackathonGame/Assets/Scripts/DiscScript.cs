@@ -251,6 +251,11 @@ public class DiscScript : MonoBehaviour
         return pointValue;
     }
 
+    public float GetPointValueMax()
+    {
+        return pointMax;
+    }
+
     public Transform GetPlayerOwner()
     {
         return playerOwner;

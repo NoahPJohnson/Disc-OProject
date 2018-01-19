@@ -15,8 +15,17 @@ public class Player2AIScript : MonoBehaviour
     [SerializeField] Transform player2CatchBox;
     CatchScript player2CatchScript;
 
+    [SerializeField] bool anticipateMode = true;
+    [SerializeField] int missCount = 0;
+    [SerializeField] int missThreshold = 6;
     [SerializeField] bool catchAttempted = false;
     [SerializeField] bool discThrown = false;
+
+    [SerializeField] Transform player1Reference;
+    [SerializeField] Vector3 throwTargetVector;
+    [SerializeField] bool throwTargetConfirmed;
+    [SerializeField] float timeToThrow;
+    float throwTimer = 0;
 
     [SerializeField] Transform disc1;
     [SerializeField] float oldDisc1Points = 0;
@@ -35,12 +44,15 @@ public class Player2AIScript : MonoBehaviour
     [SerializeField] Transform Teleporter1;
     [SerializeField] Transform Teleporter2;
 
+
+
 	// Use this for initialization
 	void Start ()
     {
         player2CatchScript = player2CatchBox.GetComponent<CatchScript>();
         rotationInterface = new PlayerRotationType1();
         rotationInterface.IdentifyPlayer(player2CatchBox);
+        player1Reference = GameObject.FindGameObjectWithTag("Player1").transform;
     }
 	
 	// Update is called once per frame
@@ -48,18 +60,73 @@ public class Player2AIScript : MonoBehaviour
     {
         if (activeAI == true)
         {
+            if (missCount > missThreshold)
+            {
+                missCount = 0;
+                anticipateMode = !anticipateMode;
+                //Debug.Log("Switch: " + anticipateMode);
+            }
             if (player2CatchScript.holdingDisc == true)
             {
-                
-                //check facing, if angle is too obtuse(facing a wall), aim for a shallow angled throw toward the goal or teleporter, else throw immediately
-                //throw disc as soon as it reaches target (raycast against goal/wall/teleporter? Measure angle of reflection?)
-                //rotationInterface.Rotate(targetDiscRelativePosition.normalized.x, targetDiscRelativePosition.normalized.z);
-                player2CatchScript.AttemptThrow();
-                if (discThrown == false)
+
+                //If in possession of two discs, in the lead, and at least one disc has points, let that one go until it has 4, mark it as target until it is caught or intercepted
+
+                if (Mathf.Abs(Mathf.Abs(player1Reference.position.x) - Mathf.Abs(GoalLine.position.x)) < Mathf.Abs(Mathf.Abs(player1Reference.position.x) - Mathf.Abs(Teleporter1.position.x)) && throwTargetConfirmed == false)
                 {
-                    discThrown = true;
-                    //Debug.Log("throw");
+                    //Player is closer to goal, throw toward goal but away from player
+                    //throwTargetVector = GoalLine.position - player2CatchBox.position;
+                    if (Mathf.Abs(player1Reference.position.z - 6) < Mathf.Abs(player1Reference.position.z + 6))
+                    {
+                        throwTargetVector = new Vector3(player1Reference.position.x - transform.position.x, 0, -6 - transform.position.z);
+                    }
+                    else
+                    {
+                        throwTargetVector = new Vector3(player1Reference.position.x - transform.position.x, 0, 6 - transform.position.z);
+                    }
+                    throwTimer = 0;
+                    timeToThrow = Mathf.Abs(Mathf.Atan2(throwTargetVector.normalized.x, throwTargetVector.normalized.z) - Mathf.Atan2(player2CatchBox.forward.x, player2CatchBox.forward.z));
+                    
+                    throwTargetConfirmed = true;
                 }
+                else if (Mathf.Abs(Mathf.Abs(player1Reference.position.x) - Mathf.Abs(GoalLine.position.x)) >= Mathf.Abs(Mathf.Abs(player1Reference.position.x) - Mathf.Abs(Teleporter1.position.x)) && throwTargetConfirmed == false)
+                {
+                    //Player is closer to teleporter, throw toward teleporter but away from player
+                    //throwTargetVector = Teleporter2.position - transform.GetChild(0).position;
+                    if (Mathf.Abs(player1Reference.position.z - 6) < Mathf.Abs(player1Reference.position.z + 6))
+                    {
+                        throwTargetVector = new Vector3(2*Teleporter2.position.x + (player1Reference.position.x - transform.position.x), 0, -6 - transform.position.z);
+                    }
+                    else
+                    {
+                        throwTargetVector = new Vector3(2*Teleporter2.position.x + (player1Reference.position.x - transform.position.x), 0, 6 - transform.position.z);
+                    }
+                    throwTimer = 0;
+                    timeToThrow = Mathf.Abs(Mathf.Atan2(throwTargetVector.normalized.x, throwTargetVector.normalized.z) - Mathf.Atan2(player2CatchBox.forward.x, player2CatchBox.forward.z));
+                    
+                    throwTargetConfirmed = true;
+                }
+                throwTimer += Time.deltaTime;
+                //timer based on distance from target vector
+                if (throwTimer < timeToThrow/8)
+                {
+                    //Debug.Log("Fuck: " + Mathf.Abs(player2CatchBox.forward.x - throwTargetVector.normalized.x) + " Me " + Mathf.Abs(player2CatchBox.forward.z - throwTargetVector.normalized.z));
+                    rotationInterface.Rotate(throwTargetVector.normalized.x, throwTargetVector.normalized.z);
+                }
+                else
+                {
+                    throwTargetConfirmed = false;
+                    player2CatchScript.AttemptThrow();
+                    if (discThrown == false)
+                    {
+                        discThrown = true;
+                        if (missCount > 0)
+                        {
+                            missCount -= 1;
+                        }
+                    }
+                }
+                
+                    
                 
                 targetDisc = null;
             }
@@ -67,7 +134,7 @@ public class Player2AIScript : MonoBehaviour
             {
                 if (discThrown == false && catchAttempted == true)
                 {
-                    Debug.Log("M I S S E D ! !");
+                    missCount += 4;
                     catchAttempted = false;
                 }
                 else if (discThrown == true && catchAttempted == true)
@@ -91,8 +158,14 @@ public class Player2AIScript : MonoBehaviour
                     {
                         if (targetDisc.GetComponent<DiscScript>().GetSpeed() >= moveSpeed)
                         {
-                            movementVector = new Vector3(targetDiscAnticipatePosition.x, 0, targetDiscAnticipatePosition.z);
-                            //movementVector = new Vector3(targetDiscRelativePosition.x, 0, targetDiscRelativePosition.z);
+                            if (anticipateMode == true)
+                            {
+                                movementVector = new Vector3(targetDiscAnticipatePosition.x, 0, targetDiscAnticipatePosition.z);
+                            }
+                            else
+                            {
+                                movementVector = new Vector3(targetDiscRelativePosition.x, 0, targetDiscRelativePosition.z);
+                            }
                         }
                         else if (targetDisc.GetComponent<DiscScript>().GetSpeed() < moveSpeed || Mathf.Abs((targetDiscAnticipatePosition - transform.GetChild(0).position).magnitude) <= 24)
                         {
@@ -113,7 +186,6 @@ public class Player2AIScript : MonoBehaviour
                         if (catchAttempted == false)
                         {
                             catchAttempted = true;
-                            //Debug.Log("catch");
                         }
 
                     }
@@ -173,6 +245,29 @@ public class Player2AIScript : MonoBehaviour
             else if (disc1.GetComponent<DiscScript>().GetPlayerOwner() != transform.GetChild(0) && disc2.GetComponent<DiscScript>().GetPlayerOwner() == transform.GetChild(0))
             {
                 disc2Priority += 2;
+            }
+            if (disc1.GetComponent<DiscScript>().GetPlayerOwner() == transform.GetChild(0) && disc2.GetComponent<DiscScript>().GetPlayerOwner() == transform.GetChild(0) && GameObject.FindGameObjectWithTag("GameManager").GetComponent<ScoreDisplayScript>().GetPlayerScore(1) > GameObject.FindGameObjectWithTag("GameManager").GetComponent<ScoreDisplayScript>().GetPlayerScore(0))
+            {
+                if (disc1.GetComponent<DiscScript>().GetPointValue() == disc1.GetComponent<DiscScript>().GetPointValueMax() && disc1.GetComponent<DiscScript>().GetPointValue() > disc2.GetComponent<DiscScript>().GetPointValue())
+                {
+                    disc1Priority += 4;
+                    //Debug.Log("MAX PRIORITY ACHIEVED DISC 1");
+                }
+                else if (disc2.GetComponent<DiscScript>().GetPointValue() == disc2.GetComponent<DiscScript>().GetPointValueMax() && disc2.GetComponent<DiscScript>().GetPointValue() > disc1.GetComponent<DiscScript>().GetPointValue())
+                {
+                    disc2Priority += 4;
+                    //Debug.Log("MAX PRIORITY ACHIEVED DISC 2");
+                }
+                else if (disc1.GetComponent<DiscScript>().GetPointValue() > 0 || disc1.GetComponent<DiscScript>().GetPointValue() > disc2.GetComponent<DiscScript>().GetPointValue())
+                {
+                    disc1Priority -= 3;
+                    //Debug.Log("Risk Taken on disc 1");
+                }
+                else if (disc2.GetComponent<DiscScript>().GetPointValue() > 0 || disc2.GetComponent<DiscScript>().GetPointValue() > disc1.GetComponent<DiscScript>().GetPointValue())
+                {
+                    disc2Priority -= 3;
+                    //Debug.Log("Risk Taken on disc 2");
+                }
             }
             if (disc1.GetComponent<DiscScript>().GetPointValue() == 0 && disc1.GetComponent<DiscScript>().GetPlayerOwner() == transform.GetChild(0))
             {
