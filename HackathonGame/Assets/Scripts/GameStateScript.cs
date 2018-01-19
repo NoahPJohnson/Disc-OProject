@@ -36,12 +36,16 @@ public class GameStateScript : MonoBehaviour
     [SerializeField] int[] countDownArray;
     [SerializeField] GameObject scoreMaxSelector;
     [SerializeField] int[] scoreMaxArray;
+    [SerializeField] GameObject scoreSlider1;
+    [SerializeField] GameObject scoreSlider2;
     [SerializeField] GameObject discScoreMaxSelector;
     [SerializeField] int[] discScoreMaxArray;
     [SerializeField] GameObject player1ColorSelector;
     [SerializeField] GameObject player2ColorSelector;
     [SerializeField] Color[] player1ColorArray;
     [SerializeField] Color[] player2ColorArray;
+    [SerializeField] Image player1RotationTrack;
+    [SerializeField] Image player2RotationTrack;
 
     [SerializeField] GameObject InputManagerP1;
     [SerializeField] GameObject InputManagerP2;
@@ -407,11 +411,15 @@ public class GameStateScript : MonoBehaviour
     public void ChangeCountDown()
     {
         countDown = countDownArray[countDownSelector.GetComponent<SelectIndexScript>().GetIndex()];
+        countDownStart = countDown;
+        timerDisplay.GetComponent<Text>().text = countDown.ToString();
     }
 
     public void ChangeScoreMax()
     {
         scoreMax = scoreMaxArray[scoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()];
+        scoreSlider1.GetComponent<Slider>().maxValue = scoreMax;
+        scoreSlider2.GetComponent<Slider>().maxValue = scoreMax;
     }
 
     public void ChangeDiscScoreMax()
@@ -429,6 +437,8 @@ public class GameStateScript : MonoBehaviour
         debugPlayerToAdd1.GetComponent<CatchScript>().SetPlayerColor(player1ColorArray[player1ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
         player1ColorSelector.GetComponent<Image>().color = player1ColorArray[player1ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
         debugPlayerToAdd1.parent.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), player1ColorArray[player1ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        player1RotationTrack.color = player1ColorArray[player1ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
+        
     }
 
     public void ChangePlayer2Color(bool right)
@@ -440,11 +450,12 @@ public class GameStateScript : MonoBehaviour
         debugPlayerToAdd2.GetComponent<CatchScript>().SetPlayerColor(player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
         player2ColorSelector.GetComponent<Image>().color = player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
         debugPlayerToAdd2.parent.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+        player2RotationTrack.color = player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
     }
 
     public void SetDefaultRules()
     {
-        discScoreMaxSelector.GetComponent<SelectIndexScript>().SetIndex(1);
+        discScoreMaxSelector.GetComponent<SelectIndexScript>().SetIndex(2);
         debugPlayerToAdd1.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
         debugPlayerToAdd2.GetChild(1).GetComponent<DiscScript>().SetPointMax(discScoreMaxArray[discScoreMaxSelector.GetComponent<SelectIndexScript>().GetIndex()]);
 
