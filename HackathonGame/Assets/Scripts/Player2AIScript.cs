@@ -44,6 +44,8 @@ public class Player2AIScript : MonoBehaviour
     [SerializeField] Transform Teleporter1;
     [SerializeField] Transform Teleporter2;
 
+    [SerializeField] float thinkTime = 1;
+    float timer;
 
 
 	// Use this for initialization
@@ -109,7 +111,6 @@ public class Player2AIScript : MonoBehaviour
                 //timer based on distance from target vector
                 if (throwTimer < timeToThrow/8)
                 {
-                    //Debug.Log("Fuck: " + Mathf.Abs(player2CatchBox.forward.x - throwTargetVector.normalized.x) + " Me " + Mathf.Abs(player2CatchBox.forward.z - throwTargetVector.normalized.z));
                     rotationInterface.Rotate(throwTargetVector.normalized.x, throwTargetVector.normalized.z);
                 }
                 else
@@ -125,9 +126,6 @@ public class Player2AIScript : MonoBehaviour
                         }
                     }
                 }
-                
-                    
-                
                 targetDisc = null;
             }
             else
@@ -142,7 +140,13 @@ public class Player2AIScript : MonoBehaviour
                     discThrown = false;
                     catchAttempted = false;
                 }
-                TargetADisc();
+
+                timer += Time.deltaTime;
+                if (timer > thinkTime)
+                {
+                    timer = 0;
+                    TargetADisc();
+                }
 
                 originRelativePosition = new Vector3(GoalLine.position.x + 10, GoalLine.position.y, GoalLine.position.z) - transform.GetChild(0).position;
                 if (targetDisc != null)
@@ -176,6 +180,7 @@ public class Player2AIScript : MonoBehaviour
                     {
                         movementVector = new Vector3(originRelativePosition.x, 0, targetDiscRelativePosition.z);
                     }
+                    
 
                     player2Controller.Move(movementVector.normalized * moveSpeed * Time.deltaTime);
                     
@@ -192,8 +197,13 @@ public class Player2AIScript : MonoBehaviour
                 }
                 else if (targetDisc == null && targetDiscLowPriority != null)
                 {
-                    targetDisc = targetDiscLowPriority;
-                    targetDiscLowPriority = null;
+                    timer += Time.deltaTime;
+                    if (timer > thinkTime)
+                    {
+                        timer = 0;
+                        targetDisc = targetDiscLowPriority;
+                        targetDiscLowPriority = null;
+                    }
                 }
                 else if (targetDisc == null && targetDiscLowPriority == null)
                 {
@@ -207,6 +217,11 @@ public class Player2AIScript : MonoBehaviour
     public void SetAIActive(bool value)
     {
         activeAI = value;
+    }
+
+    public void SetThinkTime(float thinkValue)
+    {
+        thinkTime = thinkValue;
     }
 
     void TargetADisc()

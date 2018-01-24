@@ -108,6 +108,7 @@ public class DiscScript : MonoBehaviour
         flyVector = Vector3.forward;
         //flyVector = transform.TransformDirection(flyVector);
         //discRigidbody.AddForce(transform.forward * speed/*, ForceMode.Impulse*/);
+        //Debug.Log("Speed = " + speed);
     }
 
     public void CatchDisc(Transform catchBox)
@@ -235,10 +236,11 @@ public class DiscScript : MonoBehaviour
         pointMax = newMax;
     }
 
-    public void SetValues(int valuePoints, float valueInitialForce)
+    public void SetValues(int valuePoints, float valueInitialForce, float valueSpeedMax)
     {
         pointValue = valuePoints;
         initialForce = valueInitialForce;
+        speedMax = valueSpeedMax;
     }
 
     public float GetInitialForce()
@@ -266,18 +268,26 @@ public class DiscScript : MonoBehaviour
         return speed;
     }
 
+    public float GetSpeedMax()
+    {
+        return speedMax;
+    }
+
     public void ResetDiscValues()
     {
         pointValue = 0;
         initialForce = initialForceMin;
         ThrowDisc();
+        
     }
 
     public void ResetDiscValues2(Transform catchBox)
     {
+        pointValue = 0;
         CatchDisc(catchBox);
     } 
 
+    //These need to apply to the catchbox, not the individual disc
     public void ChangeDiscStats(float slideValue)
     {
         spinMax = defaultSpinMax + (slideValue * 6);
@@ -324,6 +334,7 @@ public class DiscScript : MonoBehaviour
             {
                 //discRigidbody.AddForce(transform.forward * incrementForce/*, ForceMode.Impulse*/);
                 speed += incrementForce;
+                //Debug.Log("Speed2 = " + speed);
             }
         }
         if (other.tag == "CatchBox")

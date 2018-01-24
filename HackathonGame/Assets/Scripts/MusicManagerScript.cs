@@ -6,6 +6,7 @@ public class MusicManagerScript : MonoBehaviour
 {
     [SerializeField] int playerCount = 2;
     [SerializeField] int totalScore = 0;
+    [SerializeField] int maxScore = 30;
     [SerializeField] int leadScoreIndex = 0;
     [SerializeField] float coolHighlightDelay;
     float timer;
@@ -34,6 +35,7 @@ public class MusicManagerScript : MonoBehaviour
 	
     public void UpdateTheme (int[] scoreArray)
     {
+        maxScore = GetComponent<GameStateScript>().GetScoreMax();
         totalScore = 0;
         leadScoreIndex = 0;
         for (int i = 0; i < playerCount; i ++)
@@ -49,8 +51,10 @@ public class MusicManagerScript : MonoBehaviour
                 tied = true;
             }
         }
-        points.setValue(totalScore/playerCount);
-        //Can improve this later
+        
+        points.setValue((totalScore/playerCount)*(50f / maxScore));
+        //Debug.Log((totalScore/playerCount) * (50f / maxScore));
+        
         if (tied == true)
         {
             themeDecision.setValue(-1f);

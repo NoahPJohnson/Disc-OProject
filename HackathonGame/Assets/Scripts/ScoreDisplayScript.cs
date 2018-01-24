@@ -56,7 +56,10 @@ public class ScoreDisplayScript : MonoBehaviour
     public void UpdateDisplay(int scoreValue, Transform scoringPlayer)
     {
         playerIndex = players.IndexOf(scoringPlayer);
-        GetComponent<MusicManagerScript>().UpdateTheme(playerScoreValues);
+        if (scoreValue != 0)
+        {
+            GetComponent<MusicManagerScript>().UpdateTheme(playerScoreValues);
+        }
         if (playerIndex > -1)
         {
             playerScoreCounters[playerIndex].text = scoreValue.ToString();

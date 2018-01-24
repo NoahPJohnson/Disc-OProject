@@ -104,6 +104,7 @@ public class CatchScript : MonoBehaviour
     public void Score(int increment)
     {
         scoreTracker.UpdateScore(increment);
+        
     }
 
 

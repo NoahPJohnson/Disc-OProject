@@ -29,6 +29,7 @@ public class GameStateScript : MonoBehaviour
     [SerializeField] GameObject TitleScreenElements;
     [SerializeField] GameObject TransitionScreen;
     [SerializeField] GameObject PauseScreen;
+    [SerializeField] GameObject ResultsScreen;
 
     [SerializeField] GameObject mapSelector;
     [SerializeField] GameObject[] mapArray;
@@ -49,7 +50,9 @@ public class GameStateScript : MonoBehaviour
 
     [SerializeField] GameObject InputManagerP1;
     [SerializeField] GameObject InputManagerP2;
+
     Player2AIScript AIScript;
+    float AIDifficulty = .25f;
 
     [SerializeField] Text timerDisplay;
     Coroutine countdownCoroutine;
@@ -88,7 +91,8 @@ public class GameStateScript : MonoBehaviour
     {
         if (scoreToCheck >= scoreMax)
         {
-            EndGame();
+            PauseEndGame();
+            //EndGame();
             //EndGame
             //winningPlayer is winner
         }
@@ -100,6 +104,7 @@ public class GameStateScript : MonoBehaviour
         {
             InputManagerP2.GetComponent<InputManagerScript>().enabled = false;
             debugPlayerToAdd2.parent.GetComponent<Player2AIScript>().enabled = true;
+            debugPlayerToAdd2.parent.GetComponent<Player2AIScript>().SetThinkTime(AIDifficulty);
         }
         else
         {
@@ -133,18 +138,49 @@ public class GameStateScript : MonoBehaviour
         }
     }
 
+    public void PauseEndGame()
+    {
+        
+            Time.timeScale = 0;
+            ResultsScreen.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(ResultsScreen.transform.GetChild(0).gameObject);
+            ResultsScreen.transform.GetChild(1).GetComponent<Text>().color = GetComponent<ScoreDisplayScript>().DeclareWinner();
+            ResultsScreen.transform.GetChild(1).GetChild(0).GetComponent<Text>().color = debugPlayerToAdd1.GetComponent<CatchScript>().GetPlayerColor();
+            ResultsScreen.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = GetComponent<ScoreDisplayScript>().GetPlayerScore(0).ToString();
+            ResultsScreen.transform.GetChild(1).GetChild(1).GetComponent<Text>().color = debugPlayerToAdd2.GetComponent<CatchScript>().GetPlayerColor();
+            ResultsScreen.transform.GetChild(1).GetChild(1).GetComponent<Text>().text = GetComponent<ScoreDisplayScript>().GetPlayerScore(1).ToString();
+            if (GetComponent<ScoreDisplayScript>().DeclareWinner() == debugPlayerToAdd1.GetComponent<CatchScript>().GetPlayerColor())
+            {
+                ResultsScreen.transform.GetChild(1).GetComponent<Text>().text = "Player 1 Wins";
+            }
+            else if (GetComponent<ScoreDisplayScript>().DeclareWinner() == debugPlayerToAdd2.GetComponent<CatchScript>().GetPlayerColor())
+            {
+                ResultsScreen.transform.GetChild(1).GetComponent<Text>().text = "Player 2 Wins";
+            }
+            else
+            {
+                ResultsScreen.transform.GetChild(1).GetComponent<Text>().text = "Draw";
+            }
+        Color winnerColor = GetComponent<ScoreDisplayScript>().DeclareWinner();
+        winnerColor.a = 0;
+        TitleScreen.GetComponent<Image>().color = winnerColor;
+        paused = true;
+    }
+
     IEnumerator StartAnimation()
     {
         TransitionScreen.transform.GetChild(0).GetComponent<Text>().text = "READY";
         TransitionScreen.SetActive(true);
         debugPlayerToAdd1.parent.position = new Vector3(debugPlayerToAdd1.parent.position.x, debugPlayerToAdd1.parent.position.y, debugPlayerToAdd1.parent.position.z + 5);
         float tempIForce1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16);
+        float tempSMax1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMax();
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30);
         debugPlayerToAdd1.GetComponent<CatchScript>().AttemptThrow();
 
         debugPlayerToAdd2.parent.position = new Vector3(debugPlayerToAdd2.parent.position.x, debugPlayerToAdd2.parent.position.y, debugPlayerToAdd2.parent.position.z - 5);
         float tempIForce2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16);
+        float tempSMax2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMax();
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30);
         debugPlayerToAdd2.GetComponent<CatchScript>().AttemptThrow();
 
         while (debugPlayerToAdd1.parent.position.z > -5 && debugPlayerToAdd2.parent.position.z < 5)
@@ -177,8 +213,8 @@ public class GameStateScript : MonoBehaviour
             }
             yield return null;
         }
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1);
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2);
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1, tempSMax1);
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2, tempSMax2);
         TransitionScreen.SetActive(false);
         yield return null;
     }
@@ -196,7 +232,8 @@ public class GameStateScript : MonoBehaviour
             }
             yield return null;
         }
-        EndGame();
+        PauseEndGame();
+        //EndGame();
         //EndGame
     }
 
@@ -233,6 +270,7 @@ public class GameStateScript : MonoBehaviour
         else
         {
             TitleScreen.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(TitleScreen.transform.GetChild(0).GetChild(1).gameObject);
             while (OptionsScreen.GetComponent<Image>().color.a > 0)
             {
                 Color fadeColor = OptionsScreen.GetComponent<Image>().color;
@@ -335,16 +373,21 @@ public class GameStateScript : MonoBehaviour
 
     public void EndGame()
     {
-        Time.timeScale = 1;
-        PauseScreen.SetActive(false);
+        //Time.timeScale = 0;
+        //paused = true;
+
         GetComponent<MusicManagerScript>().SetPaused(false);
         paused = false;
         StopCoroutine(countdownCoroutine);
-        Color winnerColor = GetComponent<ScoreDisplayScript>().DeclareWinner();
-        winnerColor.a = 0;
-        TitleScreen.GetComponent<Image>().color = winnerColor;
-        StartCoroutine(FadeTitleScreen(true));
+        
         ResetGame();
+
+        Time.timeScale = 1;
+        PauseScreen.SetActive(false);
+        ResultsScreen.SetActive(false);
+
+        StartCoroutine(FadeTitleScreen(true));
+        
     }
 
     void ResetGame()
@@ -383,12 +426,14 @@ public class GameStateScript : MonoBehaviour
         for (int i = 0; i < discs.Length; i++)
         {
             catchBoxes[i].GetComponent<CatchScript>().SetThrowSignalOff();
+            catchBoxes[i].GetComponent<CatchScript>().SetThrowFalse();
             discs[i].GetComponent<DiscScript>().ResetDiscValues();
         }
         for (int i = 0; i < discs.Length; i++)
         {
             discs[i].GetComponent<DiscScript>().ResetDiscValues2(catchBoxes[i].transform);
             catchBoxes[i].GetComponent<CatchScript>().ResetValues();
+
         }
         
     }
@@ -453,6 +498,11 @@ public class GameStateScript : MonoBehaviour
         player2RotationTrack.color = player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
     }
 
+    public void ChangeBotDifficulty(float value)
+    {
+        AIDifficulty = 2 - (value);
+    }
+
     public void SetDefaultRules()
     {
         discScoreMaxSelector.GetComponent<SelectIndexScript>().SetIndex(2);
@@ -490,6 +540,11 @@ public class GameStateScript : MonoBehaviour
         debugPlayerToAdd2.GetComponent<CatchScript>().SetPlayerColor(player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
         player2ColorSelector.GetComponent<Image>().color = player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()];
         debugPlayerToAdd2.parent.GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), player2ColorArray[player2ColorSelector.GetComponent<SelectIndexScript>().GetIndex()]);
+    }
+
+    public int GetScoreMax()
+    {
+        return scoreMax;
     }
 
     public void ExitGame()

@@ -16,15 +16,15 @@ public class SwapPlayerOptions : MonoBehaviour
         {
             inputOptions.SetActive(true);
             statOptions.SetActive(false);
-            GetComponent<Button>().enabled = false;
-            oppositeTab.GetComponent<Button>().enabled = true;
+            //GetComponent<Button>().enabled = false;
+            //oppositeTab.GetComponent<Button>().enabled = true;
         }
         else if (input == false && statOptions.activeSelf == false)
         {
             statOptions.SetActive(true);
             inputOptions.SetActive(false);
-            GetComponent<Button>().enabled = false;
-            oppositeTab.GetComponent<Button>().enabled = true;
+            //GetComponent<Button>().enabled = false;
+            //oppositeTab.GetComponent<Button>().enabled = true;
         }
     }
 }
