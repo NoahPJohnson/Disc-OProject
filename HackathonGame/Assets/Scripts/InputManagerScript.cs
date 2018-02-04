@@ -31,6 +31,8 @@ public class InputManagerScript : MonoBehaviour
     [SerializeField] PlayerCatchReleaseInterface catchInterface;
     [SerializeField] PlayerPauseInterface pauseInterface;
 
+    [SerializeField] Text controllerNameLabel;
+    string defaultControllerLabelText;
     [SerializeField] GameObject selectorObject;
     [SerializeField] GameObject[] buttonSelectorArray;
     [SerializeField] GameObject controllerGroup;
@@ -39,6 +41,7 @@ public class InputManagerScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        
         if (Input.GetJoystickNames().Length == 0)
         {
             inputDevice = 0;
@@ -47,12 +50,45 @@ public class InputManagerScript : MonoBehaviour
         }
         else if (Input.GetJoystickNames().Length >= 1 && controllerNumber == 1)
         {
+            if (Input.GetJoystickNames()[0] == "Wireless Controller")
+            {
+                hAxisArray[1] = "DPadXPS4P1";
+                hAxisArray[2] = "RightStickXForPS4P1";
+                vAxisArray[1] = "DPadYPS4P1";
+                vAxisArray[2] = "RightStickYForPS4P1";
+                buttonArray[5] = "PausePS4P1";
+            }
+            else
+            {
+                hAxisArray[1] = "HorizontalDPad1";
+                hAxisArray[2] = "RightStick X1";
+                vAxisArray[1] = "VerticalDPad1";
+                vAxisArray[2] = "RightStick Y1";
+                buttonArray[5] = "Pause1";
+            }
             inputDevice = 1;
+            Debug.Log(Input.GetJoystickNames()[0] + " | ");
             selectorObject.GetComponent<SelectIndexScript>().SetIndex(1);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }
         else if (Input.GetJoystickNames().Length == 2 && controllerNumber == 2)
         {
+            if (Input.GetJoystickNames()[1] == "Wireless Controller")
+            {
+                hAxisArray[1] = "DPadXPS4P2";
+                hAxisArray[2] = "RightStickXForPS4P2";
+                vAxisArray[1] = "DPadYPS4P2";
+                vAxisArray[2] = "RightStickYForPS4P2";
+                buttonArray[5] = "PausePS4P2";
+            }
+            else
+            {
+                hAxisArray[1] = "HorizontalDPad2";
+                hAxisArray[2] = "RightStick X2";
+                vAxisArray[1] = "VerticalDPad2";
+                vAxisArray[2] = "RightStick Y2";
+                buttonArray[5] = "Pause2";
+            }
             inputDevice = 2;
             selectorObject.GetComponent<SelectIndexScript>().SetIndex(2);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
@@ -65,6 +101,8 @@ public class InputManagerScript : MonoBehaviour
         }
         SetDefaultControls();
         ChangeInputDisplay();
+        defaultControllerLabelText = controllerNameLabel.text;
+        SetControllerLabelText();
         //movementInterface = moveType1;
         movementInterface.IdentifyPlayer(playerController);
         rotationInterface.IdentifyPlayer(playerRotationTransform);
@@ -222,6 +260,22 @@ public class InputManagerScript : MonoBehaviour
         if (controller1 == true)
         {
             controller1 = false;
+            if (Input.GetJoystickNames()[1] == "Wireless Controller")
+            {
+                hAxisArray[1] = "DPadXPS4P1";
+                hAxisArray[2] = "RightStickXForPS4P1";
+                vAxisArray[1] = "DPadYPS4P1";
+                vAxisArray[2] = "RightStickYForPS4P1";
+                buttonArray[5] = "PausePS4P1";
+            }
+            else
+            {
+                hAxisArray[1] = "HorizontalDPad1";
+                hAxisArray[2] = "RightStick X1";
+                vAxisArray[1] = "VerticalDPad1";
+                vAxisArray[2] = "RightStick Y1";
+                buttonArray[5] = "Pause1";
+            }
             for (int i = 0; i < buttonArray.Length; i ++)
             {
                 buttonArray[i] = buttonArray[i].Remove(buttonArray[i].Length-1);
@@ -242,6 +296,22 @@ public class InputManagerScript : MonoBehaviour
         else
         {
             controller1 = true;
+            if (Input.GetJoystickNames()[0] == "Wireless Controller")
+            {
+                hAxisArray[1] = "DPadXPS4P1";
+                hAxisArray[2] = "RightStickXForPS4P1";
+                vAxisArray[1] = "DPadYPS4P1";
+                vAxisArray[2] = "RightStickYForPS4P1";
+                buttonArray[5] = "PausePS4P1";
+            }
+            else
+            {
+                hAxisArray[1] = "HorizontalDPad1";
+                hAxisArray[2] = "RightStick X1";
+                vAxisArray[1] = "VerticalDPad1";
+                vAxisArray[2] = "RightStick Y1";
+                buttonArray[5] = "Pause1";
+            }
             for (int i = 0; i < buttonArray.Length; i++)
             {
                 buttonArray[i] = buttonArray[i].Remove(buttonArray[i].Length-1);
@@ -280,6 +350,7 @@ public class InputManagerScript : MonoBehaviour
         inputDevice = selectorObject.GetComponent<SelectIndexScript>().GetIndex();
         SetDefaultControls();
         ChangeInputDisplay();
+        SetControllerLabelText();
         if (inputDevice == 0)
         {
             rotationInterface = new PlayerRotationType2();
@@ -291,7 +362,17 @@ public class InputManagerScript : MonoBehaviour
         rotationInterface.IdentifyPlayer(playerRotationTransform);
     }
 
-    
+    public void SetControllerLabelText()
+    {
+        if (inputDevice > 0)
+        {
+            controllerNameLabel.text = defaultControllerLabelText + Input.GetJoystickNames()[inputDevice-1];
+        }
+        else
+        {
+            controllerNameLabel.text = defaultControllerLabelText + "Keyboard";
+        }
+    }
 
     public int GetInputDevice()
     {

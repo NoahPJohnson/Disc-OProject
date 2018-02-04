@@ -1,0 +1,46 @@
+Initialize engine version: 5.6.1f1 (2860b30f0b54)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: Intel(R) HD Graphics 4600 (ID=0x416)
+    Vendor:   Intel
+    VRAM:     1136 MB
+    Driver:   20.19.15.4624
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.021 seconds
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Noah\Documents\GitHub\Disc-OProject\HackathonGame\Disc-OVersion1.23_Data\Managed\System.dll (this message is harmless)
+desktop: 1600x900 60Hz; virtual: 1600x900 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 3.672247 ms
+FMOD Studio: Creating runtime system instance
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+FMOD Studio Integration: Please add an 'FMOD Studio Listener' component to your a camera in the scene for correct 3D positioning of sounds
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 860 -> priority: 1 
+  Thread -> id: 3488 -> priority: 1 
+  Thread -> id: 3390 -> priority: 1 
+  Thread -> id: 3acc -> priority: 1 
+FMOD Studio: Destroying runtime system instance
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+

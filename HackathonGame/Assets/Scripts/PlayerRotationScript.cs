@@ -93,6 +93,11 @@ public class PlayerRotationScript : MonoBehaviour
         revMin = -revMax;
     }
 
+    public void SetRevSpeed(float newRevSpeed)
+    {
+        revSpeed += newRevSpeed;
+    }
+
     public void SetRevFactor(float revValue)
     {
         revFactor += revValue;

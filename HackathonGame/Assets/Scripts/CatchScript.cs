@@ -19,6 +19,8 @@ public class CatchScript : MonoBehaviour
     [SerializeField] Color catchboxColor;
     [SerializeField] int score;
 
+    [SerializeField] float statSliderValue = 0;
+
     [SerializeField] float recoveryTime;
     [SerializeField] bool ableToCatch;
     public bool holdingDisc;
@@ -107,6 +109,15 @@ public class CatchScript : MonoBehaviour
         
     }
 
+    public void SetSliderValue(float slideValue)
+    {
+        statSliderValue = slideValue;
+    }
+
+    public float GetSliderValue()
+    {
+        return statSliderValue;
+    }
 
     public int GetScore()
     {

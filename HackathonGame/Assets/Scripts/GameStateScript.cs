@@ -113,6 +113,18 @@ public class GameStateScript : MonoBehaviour
         }
     }
 
+    public void SwitchObjectOnButtonPress(GameObject buttonObject)
+    {
+        if (buttonObject.transform.GetChild(1).gameObject.activeSelf == false)
+        {
+            buttonObject.transform.GetChild(1).gameObject.SetActive(true);
+        }
+        else
+        {
+            buttonObject.transform.GetChild(1).gameObject.SetActive(false);
+        }
+    }
+
     public void AddPlayer(Transform playerToAdd)
     {
         players.Add(playerToAdd);
@@ -174,13 +186,15 @@ public class GameStateScript : MonoBehaviour
         debugPlayerToAdd1.parent.position = new Vector3(debugPlayerToAdd1.parent.position.x, debugPlayerToAdd1.parent.position.y, debugPlayerToAdd1.parent.position.z + 5);
         float tempIForce1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
         float tempSMax1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMax();
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30);
+        float tempSMin1 = debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMin();
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30, 5);
         debugPlayerToAdd1.GetComponent<CatchScript>().AttemptThrow();
 
         debugPlayerToAdd2.parent.position = new Vector3(debugPlayerToAdd2.parent.position.x, debugPlayerToAdd2.parent.position.y, debugPlayerToAdd2.parent.position.z - 5);
         float tempIForce2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetInitialForce();
         float tempSMax2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMax();
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30);
+        float tempSMin2 = debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().GetSpeedMin();
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, 16, 30, 5);
         debugPlayerToAdd2.GetComponent<CatchScript>().AttemptThrow();
 
         while (debugPlayerToAdd1.parent.position.z > -5 && debugPlayerToAdd2.parent.position.z < 5)
@@ -213,8 +227,8 @@ public class GameStateScript : MonoBehaviour
             }
             yield return null;
         }
-        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1, tempSMax1);
-        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2, tempSMax2);
+        debugPlayerToAdd1.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce1, tempSMax1, tempSMin1);
+        debugPlayerToAdd2.GetComponent<CatchScript>().transform.GetChild(1).GetComponent<DiscScript>().SetValues(0, tempIForce2, tempSMax2, tempSMin2);
         TransitionScreen.SetActive(false);
         yield return null;
     }
@@ -304,6 +318,7 @@ public class GameStateScript : MonoBehaviour
         if (fadeIn == true)
         {
             //GetComponent<MusicManagerScript>().SetInGame(false);
+            EventSystem.current.SetSelectedGameObject(TitleScreen.transform.GetChild(0).GetChild(1).gameObject);
             if (TitleScreen.activeSelf == false)
             {
                 TitleScreen.SetActive(true);

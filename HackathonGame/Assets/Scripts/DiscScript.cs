@@ -93,7 +93,9 @@ public class DiscScript : MonoBehaviour
     public void ThrowDisc()
     {
         //flyVector = transform.parent.rotation.eulerAngles.normalized;
+        //ChangeDiscStats(playerOwner.GetComponent<CatchScript>().GetSliderValue());
         spinFactor = playerOwner.GetComponent<PlayerRotationScript>().GetRevFactor();
+        spinFactor = Mathf.Clamp(spinFactor, -spinMax, spinMax);
         spinVector = new Vector3(0, spinFactor, 0);
         transform.parent = null;
         if (initialForce < initialForceMin)
@@ -142,6 +144,7 @@ public class DiscScript : MonoBehaviour
             discRigidbody.velocity = Vector3.zero;
             discRigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             playerOwner = transform.parent;
+            ChangeDiscStats(playerOwner.GetComponent<CatchScript>().GetSliderValue());
             GetComponent<Renderer>().material.SetColor(Shader.PropertyToID("_Color"), playerOwner.GetComponent<CatchScript>().GetPlayerColor());
             /*if (playerOwner.GetComponent<CatchScript>().GetPlayerType() == true)
             {
@@ -236,11 +239,12 @@ public class DiscScript : MonoBehaviour
         pointMax = newMax;
     }
 
-    public void SetValues(int valuePoints, float valueInitialForce, float valueSpeedMax)
+    public void SetValues(int valuePoints, float valueInitialForce, float valueSpeedMax, float valueSpeedMin)
     {
         pointValue = valuePoints;
         initialForce = valueInitialForce;
         speedMax = valueSpeedMax;
+        speedMin = valueSpeedMin;
     }
 
     public float GetInitialForce()
@@ -273,6 +277,11 @@ public class DiscScript : MonoBehaviour
         return speedMax;
     }
 
+    public float GetSpeedMin()
+    {
+        return speedMin;
+    }
+
     public void ResetDiscValues()
     {
         pointValue = 0;
@@ -292,9 +301,11 @@ public class DiscScript : MonoBehaviour
     {
         spinMax = defaultSpinMax + (slideValue * 6);
         spinDecay = defaultSpinDecay + (-slideValue * .05f);
-        initialForce = defaultInitialForce * (Mathf.Pow(5, (-slideValue/10)));
-        initialForceMin = speedMin = initialForce;
-        speedMax = defaultSpeedMax + (-slideValue * 2);
+        //initialForce = defaultInitialForce * (Mathf.Pow(5, (-slideValue/10)));
+        initialForceMin = defaultInitialForce *(Mathf.Pow(5, (-slideValue / 10)));//= speedMin = initialForce;
+        //speedMax = defaultSpeedMax + (-slideValue * 2);
+        playerOwner.GetComponent<PlayerRotationScript>().SetRevMax(spinMax);
+        playerOwner.GetComponent<PlayerRotationScript>().SetRevSpeed(slideValue * 30);
     }
 
     public void DefaultDiscStats()
