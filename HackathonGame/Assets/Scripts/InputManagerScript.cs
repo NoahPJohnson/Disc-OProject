@@ -67,7 +67,6 @@ public class InputManagerScript : MonoBehaviour
                 buttonArray[5] = "Pause1";
             }
             inputDevice = 1;
-            Debug.Log(Input.GetJoystickNames()[0] + " | ");
             selectorObject.GetComponent<SelectIndexScript>().SetIndex(1);
             SetInterfaceType(new PlayerMovementType1(), new PlayerRotationType1(), new PlayerCatchReleaseType1(), new PlayerPauseType1());
         }

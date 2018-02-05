@@ -5,10 +5,10 @@
             <value>false</value>
         </property>
         <relationship name="selectables">
-            <destination>{935519f2-b701-49b1-8888-491e0a9d97cc}</destination>
+            <destination>{ecf370a4-f67b-47e0-bb73-0bab36b57a43}</destination>
         </relationship>
         <relationship name="uiLastParameterSelection">
-            <destination>{43a716d0-bc01-4773-b6a9-5c92b8e4146d}</destination>
+            <destination>{04c3507b-32fe-402d-9bc9-9e7c95e1e614}</destination>
         </relationship>
     </object>
     <object class="MasterTrack" id="{cac502b1-5672-42aa-9312-fa320dde0172}">
@@ -30,27 +30,15 @@
             <value>true</value>
         </property>
     </object>
-    <object class="GroupTrack" id="{79291768-adde-4fb1-96d7-05adb19f8104}">
-        <property name="uiAutomationTracksVisible">
-            <value>true</value>
-        </property>
-    </object>
-    <object class="GroupTrack" id="{2f174c1e-f6aa-457e-8918-15baa30c673e}">
-        <property name="uiAutomationTracksVisible">
-            <value>true</value>
-        </property>
-    </object>
+    <object class="GroupTrack" id="{79291768-adde-4fb1-96d7-05adb19f8104}"/>
+    <object class="GroupTrack" id="{2f174c1e-f6aa-457e-8918-15baa30c673e}"/>
     <object class="GroupTrack" id="{cda9af09-6dd1-47bb-b94b-6376da2fab5c}"/>
     <object class="GroupTrack" id="{4c55f918-3f06-4dd7-90c8-39f00c959e42}">
         <property name="uiAutomationTracksVisible">
             <value>true</value>
         </property>
     </object>
-    <object class="GroupTrack" id="{033b11cd-afa7-4cb6-8216-c7129947b7d9}">
-        <property name="uiAutomationTracksVisible">
-            <value>true</value>
-        </property>
-    </object>
+    <object class="GroupTrack" id="{033b11cd-afa7-4cb6-8216-c7129947b7d9}"/>
     <object class="GroupTrack" id="{08d5b404-dd25-49e8-8146-76afea1829a3}"/>
     <object class="GroupTrack" id="{053eba47-98ff-43de-9eb8-d72b68c8e273}"/>
     <object class="GroupTrack" id="{b877fc38-6a76-4d03-8139-5e5d8c66bd1f}">
@@ -75,13 +63,13 @@
     </object>
     <object class="Timeline" id="{2f5f33e5-5d7d-460c-9b10-90565fc13ae0}">
         <property name="cursorPosition">
-            <value>29.893978993734059</value>
+            <value>0</value>
         </property>
         <property name="uiLastRulerScaleRatio">
             <value>0.0069327409540199583</value>
         </property>
         <property name="uiLastHorizontalScrollBarValue">
-            <value>4262</value>
+            <value>5309</value>
         </property>
     </object>
     <object class="GameParameter" id="{fed4b988-70f5-4087-9a1f-9dcff59b5833}">
@@ -92,26 +80,23 @@
             <value>0.00082781456953642384</value>
         </property>
         <property name="uiLastHorizontalScrollBarValue">
-            <value>238</value>
+            <value>568</value>
         </property>
     </object>
     <object class="GameParameter" id="{43a716d0-bc01-4773-b6a9-5c92b8e4146d}">
         <property name="cursorPosition">
-            <value>1</value>
+            <value>0.99668872356414795</value>
         </property>
         <property name="uiLastRulerScaleRatio">
             <value>0.0030581039755351682</value>
         </property>
-        <property name="uiLastHorizontalScrollBarValue">
-            <value>170</value>
-        </property>
     </object>
     <object class="GameParameter" id="{04c3507b-32fe-402d-9bc9-9e7c95e1e614}">
         <property name="cursorPosition">
-            <value>50</value>
+            <value>40.5</value>
         </property>
         <property name="uiLastRulerScaleRatio">
-            <value>0.0764525993883792</value>
+            <value>0.041390728476821195</value>
         </property>
     </object>
     <object class="GameParameter" id="{0877bd42-6646-433b-ac22-257a18a13570}">
@@ -121,9 +106,6 @@
         <property name="uiLastRulerScaleRatio">
             <value>0.00082781456953642384</value>
         </property>
-        <property name="uiLastHorizontalScrollBarValue">
-            <value>543</value>
-        </property>
     </object>
     <object class="GameParameter" id="{4cab3830-a81b-4d13-9dca-9b6557ceb2a5}">
         <property name="cursorPosition">
@@ -131,9 +113,6 @@
         </property>
         <property name="uiLastRulerScaleRatio">
             <value>0.0030581039755351682</value>
-        </property>
-        <property name="uiLastHorizontalScrollBarValue">
-            <value>11</value>
         </property>
     </object>
     <object class="GameParameter" id="{706c79e0-159d-447d-8194-c8bf50a28698}">
@@ -320,8 +299,8 @@
     <object class="MixerBusEffectChain" id="{77fbe3b0-cad4-444f-acb8-1b3bc092fc75}"/>
     <object class="MixerBusPanner" id="{11b5646a-fef6-4556-91df-9b8f6aaaf8ed}"/>
     <object class="ParameterCondition" id="{22033e20-a89b-4eb4-9f16-53738c7f554f}"/>
-    <object class="TransitionTimeline" id="{b379a042-6ff4-4063-8cc4-79f6fa6390a0}"/>
     <object class="ParameterCondition" id="{37a33186-7054-48a8-b583-1420d403fda7}"/>
+    <object class="TransitionTimeline" id="{b379a042-6ff4-4063-8cc4-79f6fa6390a0}"/>
     <object class="ParameterCondition" id="{e098c40c-42a0-44b0-a567-d299f23798d5}"/>
     <object class="ParameterCondition" id="{12805616-1c32-4a11-84ff-0a3a5982c252}"/>
     <object class="ParameterCondition" id="{97e83ac1-9599-4bd4-a79c-664179e2441a}"/>
@@ -330,6 +309,7 @@
     <object class="ParameterCondition" id="{d3569118-ee02-453c-863e-054d308266a0}"/>
     <object class="ParameterCondition" id="{c29d7431-73a9-447e-8a00-f0c3db16e928}"/>
     <object class="MixerBusFader" id="{0c3c7521-9def-4320-b8b2-30e06ba9b405}"/>
+    <object class="LoudnessMeter" id="{080baab1-f6b2-46a8-90d0-fd3a5f468a55}"/>
     <object class="MixerBusFader" id="{1d026c46-786b-4f7e-a4ea-9a043ac00e8c}"/>
     <object class="MixerBusFader" id="{14cd9785-4e96-446a-b43c-5188ae322008}"/>
     <object class="MixerBusFader" id="{97a20b1c-7585-4b9d-92ee-115724c5e54a}"/>

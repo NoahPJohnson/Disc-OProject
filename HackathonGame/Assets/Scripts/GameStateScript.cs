@@ -48,6 +48,7 @@ public class GameStateScript : MonoBehaviour
     [SerializeField] Image player1RotationTrack;
     [SerializeField] Image player2RotationTrack;
 
+    [SerializeField] Image[] controllerIndicators;
     [SerializeField] GameObject InputManagerP1;
     [SerializeField] GameObject InputManagerP2;
 
@@ -84,8 +85,12 @@ public class GameStateScript : MonoBehaviour
         player1Stats.SetActive(false);
         player2Stats.SetActive(false);
         AIScript = debugPlayerToAdd2.parent.GetComponent<Player2AIScript>();
+        for (int i = 0; i < Input.GetJoystickNames().Length; i++)
+        {
+            controllerIndicators[i].color = Color.green;
+        }
         //Time.timeScale = 0;
-	}
+    }
 
     public void CheckScore(int scoreToCheck, Transform winningPlayer)
     {
@@ -334,6 +339,10 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreenElements.SetActive(true);
             }
+            for (int i = 0; i < Input.GetJoystickNames().Length; i++)
+            {
+                controllerIndicators[i].color = Color.green;
+            }
             //Time.timeScale = 0f;
         }
         else
@@ -355,6 +364,10 @@ public class GameStateScript : MonoBehaviour
             {
                 TitleScreen.SetActive(false);
                 
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                controllerIndicators[i].color = Color.white;
             }
         }        
     }
