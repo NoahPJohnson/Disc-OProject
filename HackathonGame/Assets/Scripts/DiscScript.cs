@@ -305,7 +305,7 @@ public class DiscScript : MonoBehaviour
         initialForceMin = defaultInitialForce *(Mathf.Pow(5, (-slideValue / 10)));//= speedMin = initialForce;
         //speedMax = defaultSpeedMax + (-slideValue * 2);
         playerOwner.GetComponent<PlayerRotationScript>().SetRevMax(spinMax);
-        playerOwner.GetComponent<PlayerRotationScript>().SetRevSpeed(slideValue * 30);
+        playerOwner.GetComponent<PlayerRotationScript>().SetRevSpeed(600 + (slideValue * 30));
     }
 
     public void DefaultDiscStats()
